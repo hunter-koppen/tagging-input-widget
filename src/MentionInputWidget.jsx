@@ -1,10 +1,8 @@
 import { Component, createElement } from "react";
 import "./ui/MentionInputWidget.css";
+import classNames from "classnames";
 
 import { MentionsInput, Mention } from 'react-mentions'
-//import defaultStyle from "./ui/defaultStyle";
-import defaultMentionStyle from "./ui/defaultMentionStyle";
-import defaultStyle from "./ui/defaultStyle";
 
 export default class MentionInputWidget extends Component {
     constructor(props) {
@@ -70,34 +68,40 @@ export default class MentionInputWidget extends Component {
 
         if (this.state.ready) {
             return (
-                <div className="mentionInputWidget">
-                    <MentionsInput
-                        value={this.state.value}
-                        onChange={this.onChangeValue}
-                        placeholder={"Mention people using '@'"}
-                        a11ySuggestionsListLabel={"Suggested mentions"}
-                        style={defaultStyle}
-                    >
-                        <Mention
-                            markup="@[__display__](user:__id__)"
-                            trigger="@"
-                            data={users}
-                            renderSuggestion={(
-                                suggestion,
-                                search,
-                                highlightedDisplay,
-                                index,
-                                focused
-                            ) => (
-                                <div className={`user ${focused ? 'focused' : ''}`}>
-                                    {highlightedDisplay}
-                                </div>
-                            )}
-                            onAdd={this.onAdd}
-                            style={defaultMentionStyle}
-                        />
-                    </MentionsInput>
-                </div>
+                <MentionsInput
+                    value={this.state.value}
+                    onChange={this.onChangeValue}
+                    placeholder={"Mention people using '@'"}
+                    className="mentions"
+                    classNames={{
+                        mentions: 'mentions__mention',
+                        mentions__input: 'form-control mx-textarea-input mentions__input',
+                        mentions__control: 'mx-textarea form-group',
+                        mentions__highlighter: 'form-control',
+                        mentions__suggestions__list: 'suggestions',
+                        mentions__suggestions__item: 'item',
+                    }}
+                    style={''}
+                    a11ySuggestionsListLabel={"Suggested mentions"}
+                >
+                    <Mention
+                        markup="@[__display__](user:__id__)"
+                        trigger="@"
+                        data={users}
+                        renderSuggestion={(
+                            suggestion,
+                            search,
+                            highlightedDisplay,
+                            index,
+                            focused
+                        ) => (
+                            <div className={`user ${focused ? 'focused' : ''}`}>
+                                {highlightedDisplay}
+                            </div>
+                        )}
+                        onAdd={this.onAdd}
+                    />
+                </MentionsInput>
             );
         } else {
             return (
