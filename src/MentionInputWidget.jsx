@@ -13,6 +13,7 @@ import data from "./data/google";
 export default class MentionInputWidget extends Component {
     constructor(props) {
         super(props);
+
         this.state = {
             value: "",
             initialValue: "",
