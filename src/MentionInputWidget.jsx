@@ -8,15 +8,28 @@ export default class MentionInputWidget extends Component {
         super(props);
         this.state = {
             ready: false,
-            value: '',
+            value: ''
         };
 
+        this.placeholder = '';
         this.onChangeHandler = this.onChange.bind(this);
     }
 
     componentDidMount() {
-        // once props have been loaded update the state
-        this.setState({ ready: true, value: this.props.valueAttribute.value });
+        this.placeholder = this.props.placeholder.value;
+        this.setState({
+            ready: true
+        });
+    }
+
+    componentDidUpdate(prevProps) {
+        if(prevProps.valueAttribute.value && prevProps.valueAttribute.value == this.props.valueAttribute.value) {
+            return;
+        } else if(!(this.props.valueAttribute.value) && !(prevProps.valueAttribute.value)) {
+            return;
+        } else {
+            this.setState({value: this.props.valueAttribute.value})
+        }
     }
 
     onAdd = () => {
@@ -24,8 +37,10 @@ export default class MentionInputWidget extends Component {
     }
 
     onChangeValue = (event, newValue, newPlainTextValue, mentions) => {
-        this.setState({ value: newValue });
-        this.props.valueAttribute.value = newValue;
+        this.setState({
+            value: newValue,
+        });
+        this.props.valueAttribute.setValue(newValue)
     }
 
 
@@ -70,12 +85,11 @@ export default class MentionInputWidget extends Component {
                 <MentionsInput
                     value={this.state.value}
                     onChange={this.onChangeValue}
-                    placeholder={"Mention people using '@'"}
+                    placeholder={this.placeholder}
                     className="mentions"
-                    a11ySuggestionsListLabel={"Suggested mentions"}
                 >
                     <Mention
-                        markup="@[__display__](user:__id__)"
+                        markup="@__display__"
                         trigger="@"
                         data={users}
                         renderSuggestion={(
@@ -90,7 +104,7 @@ export default class MentionInputWidget extends Component {
                             </div>
                         )}
                         onAdd={this.onAdd}
-                        className={classNames.mentions__mention}
+                        className="mentions__mention"
                     />
                 </MentionsInput>
             );
