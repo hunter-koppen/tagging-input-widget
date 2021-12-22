@@ -1,20 +1,32 @@
 import React, { Component, createElement } from "react";
+<<<<<<< HEAD
 import "./ui/MentionInputWidget.css";
+=======
+import ReactDOM from 'react-dom';
+import editorStyles from "./ui/MentionInputWidget.css";
+>>>>>>> da46dbd (draft js version updated)
 
 // react mentions library
 import { Mention, MentionsInput } from "react-mentions";
 
+<<<<<<< HEAD
 // emoji mart library
 import NimblePicker from "emoji-mart/dist-es/components/picker/nimble-picker";
 import NimbleEmojiIndex from "emoji-mart/dist-es/utils/emoji-index/nimble-emoji-index.js";
 import "emoji-mart/css/emoji-mart.css";
 
 import data from "./data/google";
+=======
+import mentions from "./mentions";
+import '@draft-js-plugins/mention/lib/plugin.css';
+
+>>>>>>> da46dbd (draft js version updated)
 export default class MentionInputWidget extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
+<<<<<<< HEAD
             value: "",
             initialValue: "",
             editedValue: "",
@@ -107,6 +119,25 @@ export default class MentionInputWidget extends Component {
         });
         this.setState({
             data: suggestionlist
+=======
+            ready: false,
+            value: '',
+            editorState: null,
+            open: false,
+            suggestions: mentions
+        };
+
+        this.nodeRef = React.createRef();
+        this.onChangeHandler = this.onChange.bind(this);
+    }
+
+    componentDidMount() {
+        // Once props have been loaded update the state
+        this.setState({
+            ready: true,
+            value: this.props.valueAttribute.value,
+            editorState: EditorState.createEmpty()
+>>>>>>> da46dbd (draft js version updated)
         });
         console.debug("loadData finished");
     }
@@ -155,6 +186,7 @@ export default class MentionInputWidget extends Component {
         this.setState({ initialValue: this.state.value });
     }
 
+<<<<<<< HEAD
     suggestionItem = (suggestion, search, highlightedDisplay, index, focused) => (
         <div className={`user ${focused ? "focused" : ""}`}>{suggestion.content}</div>
     );
@@ -260,13 +292,60 @@ export default class MentionInputWidget extends Component {
         if (this.props.renderMode === "textbox") {
             singleLine = true;
         }
+=======
+    onAdd = () => {
+        console.log('added a new mention');
+    }
+
+    onChange = editorState => {
+        console.log('onchangefired-' + editorState);
+        this.setState({ editorState });
+    };
+
+    onOpenChange = _open => {
+        console.log('onopenchangefired-' + _open);
+        this.setState({ open: _open });
+    };
+
+    onSearchChange = ({ value }) => {
+        console.log('onsearchchangefired-' + value);
+        this.setState({
+            suggestions: defaultSuggestionsFilter(value, mentions)
+        });
+    };
+
+    render() {
+        const mentionPlugin = createMentionPlugin();
+        const { MentionSuggestions } = mentionPlugin;
+        const plugins = [mentionPlugin];
+>>>>>>> da46dbd (draft js version updated)
 
         if (this.state.readOnly) {
             return (
+<<<<<<< HEAD
                 <div ref={this.nodeRef} className="mentionsReadOnly">
                     <MentionsInput value={this.state.value} singleLine={singleLine} className="mentions">
                         <Mention className="mentions__mention" displayTransform={this.displayTransform} />
                     </MentionsInput>
+=======
+                <div
+                    //className={editorStyles.m6zwb4v}
+                >
+                    <Editor
+                        //placeholder="Write a comment..."
+                        editorState={this.state.editorState}
+                        onChange={this.onChange}
+                        plugins={plugins}
+                        ref={this.nodeRef}
+                    />
+                    <MentionSuggestions
+                        //open={this.state.open}
+                        //onOpenChange={this.onOpenChange}
+                        suggestions={this.state.suggestions}
+                        onSearchChange={this.onSearchChange}
+                        //onAddMention={this.onAdd}
+                    />
+>>>>>>> da46dbd (draft js version updated)
                 </div>
             );
         } else {
