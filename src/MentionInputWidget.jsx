@@ -8,78 +8,81 @@ export default class MentionInputWidget extends Component {
         super(props);
         this.state = {
             ready: false,
-            value: ''
+            value: '',
+            data: ''
         };
 
         this.placeholder = '';
-        this.onChangeHandler = this.onChange.bind(this);
+        this.onMentionHandler = this.onMention.bind(this);
     }
 
     componentDidMount() {
         this.placeholder = this.props.placeholder.value;
-        this.setState({
-            ready: true
-        });
+        this.setState({ ready: true });
     }
 
     componentDidUpdate(prevProps) {
-        if(prevProps.valueAttribute.value && prevProps.valueAttribute.value == this.props.valueAttribute.value) {
+        // nothing changed
+        if (prevProps && prevProps == this.props) {
             return;
-        } else if(!(this.props.valueAttribute.value) && !(prevProps.valueAttribute.value)) {
+        }
+        // props are still empty
+        else if (!(this.props) && !(prevProps)) {
             return;
-        } else {
-            this.setState({value: this.props.valueAttribute.value})
+        }
+        // valueAttribute changed
+        else if (prevProps.valueAttribute.value !== this.props.valueAttribute.value) {
+            this.setState({ value: this.props.valueAttribute.value })
+        }
+        // datasource is loaded so we can create the mentionslist
+        else if (prevProps.datasource.status == 'loading' && this.props.datasource.status == 'available') {
+            this.loadData();
         }
     }
 
-    onAdd = () => {
-        console.log('added a new mention');
+    loadData = () => {
+        // Function for loading the list of object into the mention suggestions.
+        console.debug('loadData');
+        let data = [];
+        this.props.datasource.items.map(mxObject => {
+            const objLabel = this.props.objLabel.get(mxObject).value;
+            const objImageUrl = this.props.objImageUrl ? this.props.objImageUrl.get(mxObject).value : '';
+
+            const mentionObj =
+            {
+                id: mxObject.id,
+                display: objLabel,
+                imgUrl: objImageUrl
+            }
+            data.push(mentionObj);
+        })
+        console.log('mentiondata=' + JSON.stringify(data));
+        this.setState({
+            data: data
+        });
     }
 
     onChangeValue = (event, newValue, newPlainTextValue, mentions) => {
+        // When user changes the input of the text area we have to update the state and the actual Mendix value.
         this.setState({
             value: newValue,
         });
         this.props.valueAttribute.setValue(newValue)
     }
 
+    onMention(mention) {
+        console.log('mentionadded=' + JSON.stringify(mention));
+        // When someone is mentioned in the textarea we want to fire an action so the developer can control themselves what they want to do with it.
+        if (this.props.onMentionAction && mention) {
+            const mxObject = this.props.datasource.items.find((mxObject) => {
+                return mxObject.id == mention;
+            })
+            this.props.onMentionAction(mxObject).execute();
+        }
+    }
+
 
     render() {
-        const users = [
-            {
-                id: 'walter',
-                display: 'Walter White',
-            },
-            {
-                id: 'jesse',
-                display: 'Jesse Pinkman',
-            },
-            {
-                id: 'gus',
-                display: 'Gustavo "Gus" Fring',
-            },
-            {
-                id: 'saul',
-                display: 'Saul Goodman',
-            },
-            {
-                id: 'hank',
-                display: 'Hank Schrader',
-            },
-            {
-                id: 'skyler',
-                display: 'Skyler White',
-            },
-            {
-                id: 'mike',
-                display: 'Mike Ehrmantraut',
-            },
-            {
-                id: 'lydia',
-                display: 'Lydìã Rôdarté-Qüayle',
-            },
-        ]
-
         if (this.state.ready) {
             return (
                 <MentionsInput
@@ -91,7 +94,7 @@ export default class MentionInputWidget extends Component {
                     <Mention
                         markup="@__display__"
                         trigger="@"
-                        data={users}
+                        data={this.state.data}
                         renderSuggestion={(
                             suggestion,
                             search,
@@ -103,7 +106,7 @@ export default class MentionInputWidget extends Component {
                                 {highlightedDisplay}
                             </div>
                         )}
-                        onAdd={this.onAdd}
+                        onAdd={this.onMentionHandler}
                         className="mentions__mention"
                     />
                 </MentionsInput>
@@ -112,12 +115,6 @@ export default class MentionInputWidget extends Component {
             return (
                 <div></div>
             );
-        };
-    };
-
-    onChange() {
-        if (this.props.onChangeAction && this.props.onChangeAction.canExecute) {
-            this.props.onChangeAction.execute();
         }
     }
 }

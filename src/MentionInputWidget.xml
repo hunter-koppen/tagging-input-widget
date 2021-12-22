@@ -25,11 +25,33 @@
                 </property>
             </propertyGroup>
         </propertyGroup>
+        <propertyGroup caption="Mentions">
+            <propertyGroup caption="Mentions">
+                <property key="datasource" type="datasource" isList="true">
+                    <caption>Mentions list</caption>
+                    <description>List of object to show in the mention dropdown</description>
+                </property>
+                <property key="objLabel" type="attribute" required="true" dataSource="datasource">
+                    <caption>Mention label</caption>
+                    <description>The label attribute of the mention objects.</description>
+                    <attributeTypes>
+                        <attributeType name="String"/>
+                    </attributeTypes>
+                </property>
+                <property key="objImageUrl" type="attribute" required="false" dataSource="datasource">
+                    <caption>Image URL</caption>
+                    <description>The image url attribute of the mention objects.</description>
+                    <attributeTypes>
+                        <attributeType name="String"/>
+                    </attributeTypes>
+                </property>
+            </propertyGroup>
+        </propertyGroup>
         <propertyGroup caption="Events">
             <propertyGroup caption="Events">
-                <property key="onChangeAction" type="action" required="false">
-                    <caption>On change action</caption>
-                    <description>Action to trigger when input is changed</description>
+                <property key="onMentionAction" type="action" required="false" dataSource="datasource">
+                    <caption>On mention action</caption>
+                    <description>Action to trigger when a mention is added</description>
                 </property>
             </propertyGroup>
         </propertyGroup>
