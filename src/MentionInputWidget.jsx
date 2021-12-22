@@ -1,107 +1,113 @@
 import { Component, createElement } from "react";
 import "./ui/MentionInputWidget.css";
-import classNames from "classnames";
+//import classNames from "classnames";
 
-import { MentionsInput, Mention } from 'react-mentions'
+import Editor from '@draft-js-plugins/editor';
+import createMentionPlugin, {
+    defaultSuggestionsFilter,
+} from '@draft-js-plugins/mention';
+import { EditorState } from 'draft-js';
 
 export default class MentionInputWidget extends Component {
     constructor(props) {
         super(props);
+
         this.state = {
             ready: false,
             value: '',
+            editorState: null,
+            open: false,
+            data: null
         };
 
+        //this.nodeRef = React.createRef();
         this.onChangeHandler = this.onChange.bind(this);
     }
 
     componentDidMount() {
-        // once props have been loaded update the state
-        this.setState({ ready: true, value: this.props.valueAttribute.value });
+        // Once props have been loaded update the state
+        // const users = [
+        //     {
+        //         name: 'Matthew Russell',
+        //         link: 'https://twitter.com/mrussell247',
+        //         avatar: 'https://pbs.twimg.com/profile_images/517863945/mattsailing_400x400.jpg',
+        //     },
+        //     {
+        //         name: 'Julian Krispel-Samsel',
+        //         link: 'https://twitter.com/juliandoesstuff',
+        //         avatar: 'https://avatars2.githubusercontent.com/u/1188186?v=3&s=400',
+        //     },
+        //     {
+        //         name: 'Jyoti Puri',
+        //         link: 'https://twitter.com/jyopur',
+        //         avatar: 'https://avatars0.githubusercontent.com/u/2182307?v=3&s=400',
+        //     },
+        //     {
+        //         name: 'Max Stoiber',
+        //         link: 'https://twitter.com/mxstbr',
+        //         avatar: 'https://avatars0.githubusercontent.com/u/7525670?s=200&v=4',
+        //     },
+        //     {
+        //         name: 'Nik Graf',
+        //         link: 'https://twitter.com/nikgraf',
+        //         avatar: 'https://avatars0.githubusercontent.com/u/223045?v=3&s=400',
+        //     },
+        //     {
+        //         name: 'Pascal Brandt',
+        //         link: 'https://twitter.com/psbrandt',
+        //         avatar: 'https://pbs.twimg.com/profile_images/688487813025640448/E6O6I011_400x400.png',
+        //     },
+        // ]; 
+
+        this.setState({ 
+            ready: true, 
+            value: this.props.valueAttribute.value,
+            editorState: EditorState.createEmpty()
+            //data: users
+        });
     }
 
-    onAdd = () => {
-        console.log('added a new mention');
-    }
+    // onAdd = () => {
+    //     console.log('added a new mention');
+    // }
 
-    onChangeValue = (event, newValue, newPlainTextValue, mentions) => {
-        this.setState({ value: newValue });
-        this.props.valueAttribute.value = newValue;
-    }
+    onChange = editorState => {
+        this.setState({ editorState });
+    };
 
+    // onOpenChange = _open => {
+    //     this.setState({ open: _open });
+    // };
+
+    // onSearchChange = value => {
+    //     setSuggestions(defaultSuggestionsFilter(value, users));
+    // };
 
     render() {
-        const users = [
-            {
-                id: 'walter',
-                display: 'Walter White',
-            },
-            {
-                id: 'jesse',
-                display: 'Jesse Pinkman',
-            },
-            {
-                id: 'gus',
-                display: 'Gustavo "Gus" Fring',
-            },
-            {
-                id: 'saul',
-                display: 'Saul Goodman',
-            },
-            {
-                id: 'hank',
-                display: 'Hank Schrader',
-            },
-            {
-                id: 'skyler',
-                display: 'Skyler White',
-            },
-            {
-                id: 'mike',
-                display: 'Mike Ehrmantraut',
-            },
-            {
-                id: 'lydia',
-                display: 'Lydìã Rôdarté-Qüayle',
-            },
-        ]
+        const mentionPlugin = createMentionPlugin();
+        //const { MentionSuggestions } = mentionPlugin;
+        const plugins = [mentionPlugin];
 
         if (this.state.ready) {
             return (
-                <MentionsInput
-                    value={this.state.value}
-                    onChange={this.onChangeValue}
-                    placeholder={"Mention people using '@'"}
-                    className="mentions"
-                    classNames={{
-                        mentions: 'mentions__mention',
-                        mentions__input: 'form-control mx-textarea-input mentions__input',
-                        mentions__control: 'mx-textarea form-group',
-                        mentions__highlighter: 'form-control',
-                        mentions__suggestions__list: 'suggestions',
-                        mentions__suggestions__item: 'item',
-                    }}
-                    style={''}
-                    a11ySuggestionsListLabel={"Suggested mentions"}
+                <div
+                //className={editorStyles.editor}
+                //onClick={() => { ref.current.focus(); }}
                 >
-                    <Mention
-                        markup="@[__display__](user:__id__)"
-                        trigger="@"
-                        data={users}
-                        renderSuggestion={(
-                            suggestion,
-                            search,
-                            highlightedDisplay,
-                            index,
-                            focused
-                        ) => (
-                            <div className={`user ${focused ? 'focused' : ''}`}>
-                                {highlightedDisplay}
-                            </div>
-                        )}
-                        onAdd={this.onAdd}
+                    <Editor
+                        editorState={this.state.editorState}
+                        onChange={this.onChange}
+                        plugins={plugins}
+                        //ref={this.nodeRef}
                     />
-                </MentionsInput>
+                    {/* <MentionSuggestions
+                        open={this.state.open}
+                        onOpenChange={this.onOpenChange}
+                        suggestions={this.state.data}
+                        onSearchChange={this.onSearchChange}
+                        onAddMention={this.onAdd}
+                    /> */}
+                </div>
             );
         } else {
             return (
