@@ -1,18 +1,19 @@
 .mentions {
-    margin: 1em 0;
+    margin-bottom: 16px;
 }
 
 .mentions__control {
-    font-family: monospace;
-    font-size: 14pt;
+
 }
+
 .mentions__highlighter {
-    border: 1px solid transparent;
-    padding: 9px;
-    min-height: 63px;
+    display: inline-block;
 }
+
 .mentions__input {
-    height: 118px;
+    border: 1px solid #e7e7e9;
+    border-radius: 4px;
+    background-color: #fff;
 }
 
 .mentions__suggestions__list {

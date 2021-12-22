@@ -1,6 +1,5 @@
 import { Component, createElement } from "react";
-import "./ui/MentionInputWidget.css";
-import classNames from "classnames";
+import classNames from "./ui/MentionInputWidget.css";
 
 import { MentionsInput, Mention } from 'react-mentions'
 
@@ -73,15 +72,6 @@ export default class MentionInputWidget extends Component {
                     onChange={this.onChangeValue}
                     placeholder={"Mention people using '@'"}
                     className="mentions"
-                    classNames={{
-                        mentions: 'mentions__mention',
-                        mentions__input: 'form-control mx-textarea-input mentions__input',
-                        mentions__control: 'mx-textarea form-group',
-                        mentions__highlighter: 'form-control',
-                        mentions__suggestions__list: 'suggestions',
-                        mentions__suggestions__item: 'item',
-                    }}
-                    style={''}
                     a11ySuggestionsListLabel={"Suggested mentions"}
                 >
                     <Mention
@@ -100,6 +90,7 @@ export default class MentionInputWidget extends Component {
                             </div>
                         )}
                         onAdd={this.onAdd}
+                        className={classNames.mentions__mention}
                     />
                 </MentionsInput>
             );
