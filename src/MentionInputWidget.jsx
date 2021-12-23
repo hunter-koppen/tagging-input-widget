@@ -7,13 +7,13 @@ export default class MentionInputWidget extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            ready: false,
             value: '',
-            data: ''
+            data: '',
+            mentions: []
         };
 
         this.placeholder = '';
-        this.onMentionHandler = this.onMention.bind(this);
+        this.onAddMentionHandler = this.onAddMention.bind(this);
     }
 
     componentDidMount() {
@@ -63,58 +63,85 @@ export default class MentionInputWidget extends Component {
     }
 
     onChangeValue = (event, newValue, newPlainTextValue, mentions) => {
+        // Check for removed mentions
+        if (this.state.mentions && this.state.mentions.length > 0 && mentions && JSON.stringify(this.state.mentions) !== JSON.stringify(mentions)) {
+            this.onRemoveMention(mentions);
+        }
+
         // When user changes the input of the text area we have to update the state and the actual Mendix value.
         this.setState({
             value: newValue,
+            mentions: mentions
         });
         this.props.valueAttribute.setValue(newValue)
     }
 
-    onMention(mention) {
-        console.log('mentionadded=' + JSON.stringify(mention));
+    onAddMention(mention) {
+        console.log('addedMention=' + JSON.stringify(mention));
         // When someone is mentioned in the textarea we want to fire an action so the developer can control themselves what they want to do with it.
-        if (this.props.onMentionAction && mention) {
+        if (this.props.onAddMentionAction && mention) {
+            console.log('datasourceitems=' + JSON.stringify(this.props.datasource.items));
             const mxObject = this.props.datasource.items.find((mxObject) => {
                 return mxObject.id == mention;
             })
-            this.props.onMentionAction(mxObject).execute();
+            console.log('addedMentionObject=' + JSON.stringify(mxObject));
+            this.props.onAddMentionAction(mxObject).execute();
         }
     }
 
+    onRemoveMention(mentions) {
+        const prevMentions = this.state.mentions
+        const currentMentions = mentions
+        console.log('prevMentions=' + JSON.stringify(prevMentions));
+        console.log('currentMentions=' + JSON.stringify(currentMentions));
+
+        var removedMention = prevMentions.filter(mention => {
+            return !Boolean(currentMentions.find(newMention => newMention.id == mention.id))
+        }).map(mention => {
+            return { id: mention.id }
+        })
+
+        console.log('removedMention=' + JSON.stringify(removedMention));
+        // Call onRemove
+        if (removedMention && removedMention.length > 0 && this.props.onRemoveMentionAction) {
+            const mxObject = this.props.datasource.items.find((mxObject) => {
+                return mxObject.id == removedMention[0].id;
+            })
+            if (mxObject && mxObject.id != null) {
+                console.log('removedMentionObject=' + JSON.stringify(mxObject));
+                this.props.onRemoveMentionAction(mxObject).execute();
+            }
+        }
+
+    }
 
     render() {
-        if (this.state.ready) {
-            return (
-                <MentionsInput
-                    value={this.state.value}
-                    onChange={this.onChangeValue}
-                    placeholder={this.placeholder}
-                    className="mentions"
-                >
-                    <Mention
-                        markup="@__display__"
-                        trigger="@"
-                        data={this.state.data}
-                        renderSuggestion={(
-                            suggestion,
-                            search,
-                            highlightedDisplay,
-                            index,
-                            focused
-                        ) => (
-                            <div className={`user ${focused ? 'focused' : ''}`}>
-                                {highlightedDisplay}
-                            </div>
-                        )}
-                        onAdd={this.onMentionHandler}
-                        className="mentions__mention"
-                    />
-                </MentionsInput>
-            );
-        } else {
-            return (
-                <div></div>
-            );
-        }
+        return (
+            <MentionsInput
+                value={this.state.value}
+                onChange={this.onChangeValue}
+                placeholder={this.placeholder}
+                className="mentions"
+            >
+                <Mention
+                    //markup="@[__display__]"
+                    trigger="@"
+                    data={this.state.data}
+                    renderSuggestion={(
+                        suggestion,
+                        search,
+                        highlightedDisplay,
+                        index,
+                        focused
+                    ) => (
+                        <div className={`user ${focused ? 'focused' : ''}`}>
+                            {highlightedDisplay}
+                        </div>
+                    )}
+                    onAdd={this.onAddMentionHandler}
+                    className="mentions__mention"
+                />
+            </MentionsInput>
+        );
     }
 }
