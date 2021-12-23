@@ -1,4 +1,4 @@
-import { Component, createElement } from "react";
+import React, { Component, createElement } from "react";
 import classNames from "./ui/MentionInputWidget.css";
 
 import { MentionsInput, Mention } from 'react-mentions'
@@ -13,12 +13,20 @@ export default class MentionInputWidget extends Component {
         };
 
         this.placeholder = '';
+        this.nodeRef = React.createRef();
         this.onAddMentionHandler = this.onAddMention.bind(this);
     }
 
     componentDidMount() {
         this.placeholder = this.props.placeholder.value;
-        this.setState({ ready: true });
+
+        // We have to add some standard mendix classes to the rendered divs so they automatically look correct based on custom styles already existing
+        const mentionInput = this.nodeRef.current.querySelectorAll('.mentions__input');
+        const mentionHighlighter = this.nodeRef.current.querySelectorAll('.mentions__highlighter');
+        const mentionControl = this.nodeRef.current.querySelectorAll('.mentions__control');
+        mentionInput[0].classList.add('form-control', 'mx-textarea-input');
+        mentionHighlighter[0].classList.add('form-control');
+        mentionControl[0].classList.add('mx-textarea', 'form-group');
     }
 
     componentDidUpdate(prevProps) {
@@ -56,7 +64,7 @@ export default class MentionInputWidget extends Component {
             }
             data.push(mentionObj);
         })
-        console.log('mentiondata=' + JSON.stringify(data));
+        console.debug('mentiondata=' + JSON.stringify(data));
         this.setState({
             data: data
         });
@@ -77,23 +85,25 @@ export default class MentionInputWidget extends Component {
     }
 
     onAddMention(mention) {
-        console.log('addedMention=' + JSON.stringify(mention));
+        //console.log('addedMention=' + JSON.stringify(mention));
         // When someone is mentioned in the textarea we want to fire an action so the developer can control themselves what they want to do with it.
         if (this.props.onAddMentionAction && mention) {
-            console.log('datasourceitems=' + JSON.stringify(this.props.datasource.items));
+            //console.log('datasourceitems=' + JSON.stringify(this.props.datasource.items));
             const mxObject = this.props.datasource.items.find((mxObject) => {
                 return mxObject.id == mention;
             })
-            console.log('addedMentionObject=' + JSON.stringify(mxObject));
-            this.props.onAddMentionAction(mxObject).execute();
+            //console.log('addedMentionObject=' + JSON.stringify(mxObject));
+            if (mxObject && mxObject.id != null) {
+                this.props.onAddMentionAction(mxObject).execute();
+            }
         }
     }
 
     onRemoveMention(mentions) {
         const prevMentions = this.state.mentions
         const currentMentions = mentions
-        console.log('prevMentions=' + JSON.stringify(prevMentions));
-        console.log('currentMentions=' + JSON.stringify(currentMentions));
+        //console.log('prevMentions=' + JSON.stringify(prevMentions));
+        //console.log('currentMentions=' + JSON.stringify(currentMentions));
 
         var removedMention = prevMentions.filter(mention => {
             return !Boolean(currentMentions.find(newMention => newMention.id == mention.id))
@@ -101,47 +111,47 @@ export default class MentionInputWidget extends Component {
             return { id: mention.id }
         })
 
-        console.log('removedMention=' + JSON.stringify(removedMention));
+        //console.log('removedMention=' + JSON.stringify(removedMention));
         // Call onRemove
         if (removedMention && removedMention.length > 0 && this.props.onRemoveMentionAction) {
             const mxObject = this.props.datasource.items.find((mxObject) => {
                 return mxObject.id == removedMention[0].id;
             })
             if (mxObject && mxObject.id != null) {
-                console.log('removedMentionObject=' + JSON.stringify(mxObject));
+                //console.log('removedMentionObject=' + JSON.stringify(mxObject));
                 this.props.onRemoveMentionAction(mxObject).execute();
             }
         }
-
     }
 
     render() {
         return (
-            <MentionsInput
-                value={this.state.value}
-                onChange={this.onChangeValue}
-                placeholder={this.placeholder}
-                className="mentions"
-            >
-                <Mention
-                    //markup="@[__display__]"
-                    trigger="@"
-                    data={this.state.data}
-                    renderSuggestion={(
-                        suggestion,
-                        search,
-                        highlightedDisplay,
-                        index,
-                        focused
-                    ) => (
-                        <div className={`user ${focused ? 'focused' : ''}`}>
-                            {highlightedDisplay}
-                        </div>
-                    )}
-                    onAdd={this.onAddMentionHandler}
-                    className="mentions__mention"
-                />
-            </MentionsInput>
+            <div ref={this.nodeRef}>
+                <MentionsInput
+                    value={this.state.value}
+                    onChange={this.onChangeValue}
+                    placeholder={this.placeholder}
+                    className="mentions"
+                >
+                    <Mention
+                        trigger="@"
+                        data={this.state.data}
+                        renderSuggestion={(
+                            suggestion,
+                            search,
+                            highlightedDisplay,
+                            index,
+                            focused
+                        ) => (
+                            <div className={`user ${focused ? 'focused' : ''}`}>
+                                {highlightedDisplay}
+                            </div>
+                        )}
+                        onAdd={this.onAddMentionHandler}
+                        className="mentions__mention"
+                    />
+                </MentionsInput>
+            </div>
         );
     }
 }
