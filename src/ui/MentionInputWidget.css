@@ -3,7 +3,6 @@
 }
 
 .mentions__control {
-
 }
 
 .mentions__highlighter {
@@ -36,7 +35,7 @@
     position: relative;
     z-index: 1;
     color: #0a1325;
-    background-color: #CEE4E5;
+    background-color: #cee4e5;
     pointer-events: none;
 }
 
@@ -48,11 +47,11 @@
     right: 0;
     background-color: white;
     border: 0;
-  }
-  .emoji__picker {
+}
+.emoji__picker {
     position: absolute;
     bottom: 10px;
     right: 0;
     float: right;
     margin-left: 200px;
-  }
+}

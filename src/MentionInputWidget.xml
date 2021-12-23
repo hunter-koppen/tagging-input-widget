@@ -49,9 +49,13 @@
         </propertyGroup>
         <propertyGroup caption="Events">
             <propertyGroup caption="Events">
-                <property key="onMentionAction" type="action" required="false" dataSource="datasource">
-                    <caption>On mention action</caption>
+                <property key="onAddMentionAction" type="action" required="false" dataSource="datasource">
+                    <caption>On add mention action</caption>
                     <description>Action to trigger when a mention is added</description>
+                </property>
+                <property key="onRemoveMentionAction" type="action" required="false" dataSource="datasource">
+                    <caption>On remove mention action</caption>
+                    <description>Action to trigger when a mention is removed</description>
                 </property>
             </propertyGroup>
         </propertyGroup>
