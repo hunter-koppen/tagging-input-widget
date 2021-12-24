@@ -28,10 +28,10 @@ To do:
 add optional imageurl for in the dropdown
 add prop for singleline instead of textarea
 add prop for allowsuggestionsaddcursor
-add prop for trigger optionally
+add prop for different trigger (preferred multiple triggers and lists)
 add prop for grow automatically or set number of lines (height = integer * 4rem)
-add prop for editability (so the widget can be used to show mentions with styling aswell)
 add prop for actual textvalue events
+add props for emojis
 add cool icon
 write readme file
 rethink widget name

@@ -9,7 +9,7 @@ import { MentionsInput, Mention } from 'react-mentions'
 import NimblePicker from 'emoji-mart/dist-es/components/picker/nimble-picker'
 import "emoji-mart/css/emoji-mart.css";
 
-import data from './google';
+import data from './data/google';
 export default class MentionInputWidget extends Component {
     constructor(props) {
         super(props);
@@ -57,19 +57,8 @@ export default class MentionInputWidget extends Component {
             if (this.props.valueAttribute.status == 'available') {
                 // Check if widget is in read-only mode
                 if (prevProps.valueAttribute.status == 'loading') {
-                    const mentionHighlighter = this.nodeRef.current.querySelectorAll('.mentions__highlighter')[0];
-                    const mentionInput = this.nodeRef.current.querySelectorAll('.mentions__input')[0];
-                    if (this.props.valueAttribute.readOnly) {
-                        this.setState({ readOnly: true });
-                        mentionHighlighter.classList.add('form-control-static');
-                        mentionInput.classList.add('form-control-static', 'mx-textarea-input');
-                        mentionInput.innerHTML = this.props.valueAttribute.value
-                        const oldHTML = mentionInput.outerHTML
-                        mentionInput.outerHTML = oldHTML.replace(/(<textarea)/igm, '<div').replace(/<\/textarea>/igm, '</div>');     
-                    } else {
-                        mentionHighlighter.classList.add('form-control');
-                        mentionInput.classList.add('form-control', 'mx-textarea-input');
-                    }
+                    // if the valueattribute has become available we check if we have to convert the widget to a read-only field
+                    this.checkReadOnly();
                 }
                 // valueAttribute changed
                 if (prevProps.valueAttribute.value !== this.props.valueAttribute.value) {
@@ -83,9 +72,25 @@ export default class MentionInputWidget extends Component {
         }
     }
 
-    loadData = () => {
+    checkReadOnly() {
+        const mentionHighlighter = this.nodeRef.current.querySelectorAll('.mentions__highlighter')[0];
+        const mentionInput = this.nodeRef.current.querySelectorAll('.mentions__input')[0];
+        if (this.props.valueAttribute.readOnly) {
+            this.setState({ readOnly: true });
+            mentionHighlighter.classList.add('form-control-static');
+            mentionInput.classList.add('form-control-static', 'mx-textarea-input');
+            mentionInput.innerHTML = this.props.valueAttribute.value
+            const oldHTML = mentionInput.outerHTML
+            mentionInput.outerHTML = oldHTML.replace(/(<textarea)/igm, '<div').replace(/<\/textarea>/igm, '</div>');
+        } else {
+            mentionHighlighter.classList.add('form-control');
+            mentionInput.classList.add('form-control', 'mx-textarea-input');
+        }
+    }
+
+    loadData() {
         // Function for loading the list of object into the mention suggestions.
-        console.debug('loadData');
+        console.debug('loadDataStarted');
         let data = [];
         this.props.datasource.items.map(mxObject => {
             const objLabel = this.props.objLabel.get(mxObject).value;
@@ -105,7 +110,7 @@ export default class MentionInputWidget extends Component {
         });
     }
 
-    onChangeValue = (event, newValue, newPlainTextValue, mentions) => {
+    onChangeValue(event, newValue, newPlainTextValue, mentions) {
         // Check for removed mentions
         if (this.state.mentions && this.state.mentions.length > 0 && mentions && JSON.stringify(this.state.mentions) !== JSON.stringify(mentions)) {
             this.onRemoveMention(mentions);
@@ -120,14 +125,12 @@ export default class MentionInputWidget extends Component {
     }
 
     onAddMention(mention) {
-        //console.log('addedMention=' + JSON.stringify(mention));
+        console.debug('addedMention=' + JSON.stringify(mention));
         // When someone is mentioned in the textarea we want to fire an action so the developer can control themselves what they want to do with it.
         if (this.props.onAddMentionAction && mention) {
-            //console.log('datasourceitems=' + JSON.stringify(this.props.datasource.items));
             const mxObject = this.props.datasource.items.find((mxObject) => {
                 return mxObject.id == mention;
             })
-            //console.log('addedMentionObject=' + JSON.stringify(mxObject));
             if (mxObject && mxObject.id != null) {
                 this.props.onAddMentionAction(mxObject).execute();
             }
@@ -137,8 +140,6 @@ export default class MentionInputWidget extends Component {
     onRemoveMention(mentions) {
         const prevMentions = this.state.mentions
         const currentMentions = mentions
-        //console.log('prevMentions=' + JSON.stringify(prevMentions));
-        //console.log('currentMentions=' + JSON.stringify(currentMentions));
 
         var removedMention = prevMentions.filter(mention => {
             return !Boolean(currentMentions.find(newMention => newMention.id == mention.id))
@@ -146,21 +147,20 @@ export default class MentionInputWidget extends Component {
             return { id: mention.id }
         })
 
-        //console.log('removedMention=' + JSON.stringify(removedMention));
         // Call onRemove
         if (removedMention && removedMention.length > 0 && this.props.onRemoveMentionAction) {
+            console.debug('removedMention=' + JSON.stringify(removedMention));
             const mxObject = this.props.datasource.items.find((mxObject) => {
                 return mxObject.id == removedMention[0].id;
             })
             if (mxObject && mxObject.id != null) {
-                //console.log('removedMentionObject=' + JSON.stringify(mxObject));
                 this.props.onRemoveMentionAction(mxObject).execute();
             }
         }
     }
 
-    onAddEmoji = (emoji) => {
-        console.log('addedemoji=' + JSON.stringify(emoji));
+    onAddEmoji(emoji) {
+        console.debug('addedemoji=' + JSON.stringify(emoji));
         const newValue = this.state.value + emoji.native
         this.setState({
             showEmojis: false,
@@ -170,15 +170,9 @@ export default class MentionInputWidget extends Component {
     }
 
     handleClickOutside(event) {
-        try {
-            let node = ReactDOM.findDOMNode(this.emojiRef.current);
-            if (node && !node.contains(event.target)) {
-                // Handle outside click here
-                this.setState({ showEmojis: false });
-            }
-        } catch (error) {
-            console.error(error);
-            return null
+        let node = ReactDOM.findDOMNode(this.emojiRef.current);
+        if (node && !node.contains(event.target)) {
+            this.setState({ showEmojis: false });
         }
     }
 
