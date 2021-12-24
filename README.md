@@ -30,7 +30,6 @@ add prop for singleline instead of textarea
 add prop for allowsuggestionsaddcursor
 add prop for trigger optionally
 add prop for grow automatically or set number of lines (height = integer * 4rem)
-add prop for label
 add prop for editability (so the widget can be used to show mentions with styling aswell)
 add prop for actual textvalue events
 add cool icon

@@ -9,11 +9,21 @@
     <properties>
         <propertyGroup caption="General">
             <propertyGroup caption="General">
+
                 <property key="placeholder" type="expression" required="false">
                     <caption>Placeholder text</caption>
                     <description></description>
                     <returnType type="String" />
                 </property>
+            </propertyGroup>
+            <propertyGroup caption="Label">
+                <systemProperty key="Label"/>
+            </propertyGroup>
+            <propertyGroup caption="Visibility">
+                <systemProperty key="Visibility"/>
+            </propertyGroup>
+            <propertyGroup caption="Editability">
+                <systemProperty key="Editability"/>
             </propertyGroup>
             <propertyGroup caption="Datasource">
                 <property key="valueAttribute" type="attribute" required="true">
@@ -46,8 +56,6 @@
                     </attributeTypes>
                 </property>
             </propertyGroup>
-        </propertyGroup>
-        <propertyGroup caption="Events">
             <propertyGroup caption="Events">
                 <property key="onAddMentionAction" type="action" required="false" dataSource="datasource">
                     <caption>On add mention action</caption>
@@ -56,6 +64,26 @@
                 <property key="onRemoveMentionAction" type="action" required="false" dataSource="datasource">
                     <caption>On remove mention action</caption>
                     <description>Action to trigger when a mention is removed</description>
+                </property>
+            </propertyGroup>
+        </propertyGroup>
+        <propertyGroup caption="Emoji's">
+            <propertyGroup caption="Display">
+                <property key="emojiPickerTheme" type="enumeration" defaultValue="light">
+                    <caption>Picker Theme</caption>
+                    <description>Set a light or darkmode theme for the Emoji picker popup</description>
+                    <enumerationValues>
+                        <enumerationValue key="light">Light</enumerationValue>
+                        <enumerationValue key="dark">Dark</enumerationValue>
+                    </enumerationValues>
+                </property>
+            </propertyGroup>
+        </propertyGroup>
+        <propertyGroup caption="Events">
+            <propertyGroup caption="Events">
+                <property key="onLeave" type="action" required="false">
+                    <caption>On leave</caption>
+                    <description></description>
                 </property>
             </propertyGroup>
         </propertyGroup>
