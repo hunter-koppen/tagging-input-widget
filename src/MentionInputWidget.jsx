@@ -1,19 +1,27 @@
 import React, { Component, createElement } from "react";
-import classNames from "./ui/MentionInputWidget.css";
+import "./ui/MentionInputWidget.css";
 
+// react mentions library
 import { MentionsInput, Mention } from 'react-mentions'
 
+// emoji mart library
+import NimblePicker from 'emoji-mart/dist-es/components/picker/nimble-picker'
+import "emoji-mart/css/emoji-mart.css";
+
+import data from './google';
 export default class MentionInputWidget extends Component {
     constructor(props) {
         super(props);
         this.state = {
             value: '',
             data: '',
-            mentions: []
+            mentions: [],
+            showEmojis: false
         };
 
         this.placeholder = '';
         this.nodeRef = React.createRef();
+        this.emojiRef = React.createRef();
         this.onAddMentionHandler = this.onAddMention.bind(this);
     }
 
@@ -124,6 +132,10 @@ export default class MentionInputWidget extends Component {
         }
     }
 
+    onAddEmoji() {
+        this.setState({ showEmojis: false });
+    }
+
     render() {
         return (
             <div ref={this.nodeRef}>
@@ -151,6 +163,25 @@ export default class MentionInputWidget extends Component {
                         className="mentions__mention"
                     />
                 </MentionsInput>
+                {this.state.showEmojis ? (
+                    <span className={'emoji__picker'} ref={this.emojiRef}>
+                        <NimblePicker
+                            onSelect={this.onAddEmoji}
+                            showSkinTones={false}
+                            showPreview={false}
+                            sheetSize={32}
+                            set='google'
+                            data={data}
+                        />
+                    </span>
+                ) : (
+                    <button
+                        className={'emoji__button'}
+                        onClick={() => this.setState({ showEmojis: true })}
+                    >
+                        {String.fromCodePoint(0x1f60a)}
+                    </button>
+                )}
             </div>
         );
     }
