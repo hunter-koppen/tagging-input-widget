@@ -54,16 +54,13 @@ export default class MentionInputWidget extends Component {
             return;
         }
         else {
-            if (this.props.valueAttribute.status == 'available') {
-                // Check if widget is in read-only mode
-                if (prevProps.valueAttribute.status == 'loading') {
-                    // if the valueattribute has become available we check if we have to convert the widget to a read-only field
-                    this.checkReadOnly();
-                }
-                // valueAttribute changed
-                if (prevProps.valueAttribute.value !== this.props.valueAttribute.value) {
-                    this.setState({ value: this.props.valueAttribute.value })
-                }
+            // check if widget is readonly
+            if (prevProps.valueAttribute.status == 'loading' && this.props.valueAttribute.status == 'available') {
+                this.checkReadOnly();
+            }
+            // valueAttribute changed
+            if (prevProps.valueAttribute.value !== this.props.valueAttribute.value) {
+                this.setState({ value: this.props.valueAttribute.value })
             }
             // datasource is loaded so we can create the mentionslist
             if (this.state.readOnly == false && prevProps.datasource.status == 'loading' && this.props.datasource.status == 'available') {
@@ -110,7 +107,7 @@ export default class MentionInputWidget extends Component {
         });
     }
 
-    onChangeValue(event, newValue, newPlainTextValue, mentions) {
+    onChangeValue = (event, newValue, newPlainTextValue, mentions) => {
         // Check for removed mentions
         if (this.state.mentions && this.state.mentions.length > 0 && mentions && JSON.stringify(this.state.mentions) !== JSON.stringify(mentions)) {
             this.onRemoveMention(mentions);
