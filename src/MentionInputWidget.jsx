@@ -76,9 +76,6 @@ export default class MentionInputWidget extends Component {
             this.setState({ readOnly: true });
             mentionHighlighter.classList.add('form-control-static');
             mentionInput.classList.add('form-control-static', 'mx-textarea-input');
-            mentionInput.innerHTML = this.props.valueAttribute.value
-            const oldHTML = mentionInput.outerHTML
-            mentionInput.outerHTML = oldHTML.replace(/(<textarea)/igm, '<div').replace(/<\/textarea>/igm, '</div>');
         } else {
             mentionHighlighter.classList.add('form-control');
             mentionInput.classList.add('form-control', 'mx-textarea-input');
@@ -176,7 +173,7 @@ export default class MentionInputWidget extends Component {
     render() {
         if (this.state.readOnly) {
             return (
-                <div ref={this.nodeRef}>
+                <div ref={this.nodeRef} className="mentionsReadOnly">
                     <MentionsInput
                         value={this.state.value}
                         className="mentions"
