@@ -75,7 +75,7 @@
             </propertyGroup>
         </propertyGroup>
         <propertyGroup caption="Emoji's">
-            <propertyGroup caption="Display">
+            <propertyGroup caption="General">
                 <property key="emojiPickerTheme" type="enumeration" defaultValue="light">
                     <caption>Picker Theme</caption>
                     <description>Set a light or darkmode theme for the Emoji picker popup</description>
@@ -83,6 +83,10 @@
                         <enumerationValue key="light">Light</enumerationValue>
                         <enumerationValue key="dark">Dark</enumerationValue>
                     </enumerationValues>
+                </property>
+                <property key="autoFocusSearch" type="boolean" defaultValue="false">
+                    <caption>Autofocus search</caption>
+                    <description>When the emoji popup is opened autofocus on the searchfield.</description>
                 </property>
             </propertyGroup>
         </propertyGroup>
