@@ -84,6 +84,10 @@
                         <enumerationValue key="dark">Dark</enumerationValue>
                     </enumerationValues>
                 </property>
+                <property key="emojiTopbarColor" type="string" defaultValue="#333" required="true">
+                    <caption>Topbar color</caption>
+                    <description>The top bar category select and hover color</description>
+                </property>
                 <property key="autoFocusSearch" type="boolean" defaultValue="false">
                     <caption>Autofocus search</caption>
                     <description>When the emoji popup is opened autofocus on the searchfield.</description>

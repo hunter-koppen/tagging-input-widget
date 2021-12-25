@@ -231,6 +231,7 @@ export default class MentionInputWidget extends Component {
                                 native={true}
                                 theme={this.props.emojiPickerTheme}
                                 autoFocus={this.props.autoFocusSearch}
+                                color={this.props.emojiTopbarColor}
                             />
                         </span>
                     ) : null}
