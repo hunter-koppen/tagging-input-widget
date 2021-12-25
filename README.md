@@ -26,7 +26,6 @@
 
 To do:
 add optional imageurl for in the dropdown
-add prop for singleline instead of textarea
 add prop for allowsuggestionsaddcursor
 add prop for different trigger (preferred multiple triggers and lists)
 add prop for grow automatically or set number of lines (height = integer * 4rem)
