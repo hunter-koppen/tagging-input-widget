@@ -1,7 +1,9 @@
 .mentions {
+    /* unused */
 }
 
 .mentions__control {
+    /* unused */
 }
 
 .mentions__highlighter {
@@ -9,6 +11,7 @@
 }
 
 .mentions__input {
+    /* unused */
 }
 
 .mentions__suggestions__list {
@@ -34,6 +37,11 @@
     pointer-events: none;
 }
 
+.mentionsReadOnly .mentions__input{
+    border: none;
+    pointer-events: none;
+}
+
 .emoji__button {
     position: absolute;
     cursor: pointer;
@@ -44,5 +52,6 @@
     border: 0;
 }
 .emoji__picker {
-    float: right;
+    position: absolute;
+    right: 0;
 }
