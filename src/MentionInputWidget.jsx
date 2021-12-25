@@ -230,6 +230,7 @@ export default class MentionInputWidget extends Component {
                                 showPreview={false}
                                 native={true}
                                 theme={this.props.emojiPickerTheme}
+                                autoFocus={this.props.autoFocusSearch}
                             />
                         </span>
                     ) : null}
