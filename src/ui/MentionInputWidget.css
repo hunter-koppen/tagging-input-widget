@@ -6,8 +6,11 @@
     /* unused */
 }
 
-.mentions__highlighter {
+.mentions .mentions__highlighter {
     display: block;
+}
+.mentions .mentions__highlighter--singleLine {
+    white-space: nowrap;
 }
 
 .mentions__input {
@@ -51,6 +54,7 @@
     background-color: transparent;
     border: 0;
 }
+
 .emoji__picker {
     position: absolute;
     right: 0;

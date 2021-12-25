@@ -9,11 +9,18 @@
     <properties>
         <propertyGroup caption="General">
             <propertyGroup caption="General">
-
                 <property key="placeholder" type="expression" required="false">
                     <caption>Placeholder text</caption>
                     <description></description>
                     <returnType type="String" />
+                </property>
+                <property key="renderMode" type="enumeration" defaultValue="textarea">
+                    <caption>Render Mode</caption>
+                    <description>Render the widget as a textarea (multiline) or textbox (singleline)</description>
+                    <enumerationValues>
+                        <enumerationValue key="textarea">Textarea</enumerationValue>
+                        <enumerationValue key="textbox">Textbox</enumerationValue>
+                    </enumerationValues>
                 </property>
             </propertyGroup>
             <propertyGroup caption="Label">

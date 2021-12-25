@@ -35,7 +35,7 @@ export default class MentionInputWidget extends Component {
 
         // We have to add some standard mendix classes to the rendered divs so they automatically look correct based on custom styles already existing
         const mentionControl = this.nodeRef.current.querySelectorAll('.mentions__control');
-        mentionControl[0].classList.add('mx-textarea', 'form-group');
+        mentionControl[0].classList.add('form-group');
 
         document.addEventListener('mousedown', this.handleClickOutside, false);
     }
@@ -171,11 +171,18 @@ export default class MentionInputWidget extends Component {
     }
 
     render() {
+        // check rendermode
+        let singleLine = false
+        if (this.props.renderMode == 'textbox') {
+            singleLine = true
+        }
+
         if (this.state.readOnly) {
             return (
                 <div ref={this.nodeRef} className="mentionsReadOnly">
                     <MentionsInput
                         value={this.state.value}
+                        singleLine={singleLine}
                         className="mentions"
                     >
                         <Mention
@@ -189,6 +196,7 @@ export default class MentionInputWidget extends Component {
                 <div ref={this.nodeRef} style={{ position: "relative" }}>
                     <MentionsInput
                         value={this.state.value}
+                        singleLine={singleLine}
                         onChange={this.onChangeValue}
                         placeholder={this.placeholder}
                         className="mentions"
