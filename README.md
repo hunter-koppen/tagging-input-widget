@@ -26,12 +26,10 @@
 
 To do:
 add optional imageurl for in the dropdown
-add prop for allowsuggestionsaddcursor
-add prop for different trigger (preferred multiple triggers and lists)
-add prop for grow automatically or set number of lines (height = integer * 4rem)
+add prop for multiple triggers and lists
 add prop for actual textvalue events
-add props for emojis
 convert text to emoji feature (for example when you type :D)
 add cool icon
 write readme file
 rethink widget name
+Bugfix ios styling
