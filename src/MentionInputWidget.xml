@@ -43,7 +43,7 @@
             </propertyGroup>
         </propertyGroup>
         <propertyGroup caption="Mentions">
-            <propertyGroup caption="Mentions">
+            <propertyGroup caption="Datasource">
                 <property key="datasource" type="datasource" isList="true">
                     <caption>Mentions list</caption>
                     <description>List of object to show in the mention dropdown</description>
@@ -63,6 +63,16 @@
                     </attributeTypes>
                 </property>
             </propertyGroup>
+            <propertyGroup caption="General">
+                <property key="mentionTrigger" type="string" defaultValue="@" required="true">
+                    <caption>Trigger symbol</caption>
+                    <description></description>
+                </property>
+                <property key="allowSuggestionsAboveCursor" type="boolean" defaultValue="false">
+                    <caption>Suggestions at cursor</caption>
+                    <description>Renders the SuggestionList at the cursor if there is not enough space below</description>
+                </property>
+            </propertyGroup>
             <propertyGroup caption="Events">
                 <property key="onAddMentionAction" type="action" required="false" dataSource="datasource">
                     <caption>On add mention action</caption>
@@ -76,6 +86,12 @@
         </propertyGroup>
         <propertyGroup caption="Emoji's">
             <propertyGroup caption="General">
+                <property key="emojiEnabled" type="boolean" defaultValue="true">
+                    <caption>Emoji's enabled</caption>
+                    <description/>
+                </property>
+            </propertyGroup>
+            <propertyGroup caption="Display">
                 <property key="emojiPickerTheme" type="enumeration" defaultValue="light">
                     <caption>Picker Theme</caption>
                     <description>Set a light or darkmode theme for the Emoji picker popup</description>
@@ -88,9 +104,15 @@
                     <caption>Topbar color</caption>
                     <description>The top bar category select and hover color</description>
                 </property>
+            </propertyGroup>
+            <propertyGroup caption="Accessibility">
                 <property key="autoFocusSearch" type="boolean" defaultValue="false">
                     <caption>Autofocus search</caption>
                     <description>When the emoji popup is opened autofocus on the searchfield.</description>
+                </property>
+                 <property key="autoConvertEmoji" type="boolean" defaultValue="true">
+                    <caption>Autoconvert common smileys</caption>
+                    <description>Automatically convert text smileys to emoji's (e.g. :D)</description>
                 </property>
             </propertyGroup>
         </propertyGroup>
