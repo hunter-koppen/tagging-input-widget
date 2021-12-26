@@ -32,7 +32,7 @@ export default class MentionInputWidget extends Component {
     }
 
     componentDidMount() {
-        this.placeholder = this.props.placeholder.value;
+        this.placeholder = (this.props.placeholder) ? this.props.placeholder.value : '';
 
         // We have to add some standard mendix classes to the rendered divs so they automatically look correct based on custom styles already existing
         const mentionControl = this.nodeRef.current.querySelectorAll('.mentions__control');
