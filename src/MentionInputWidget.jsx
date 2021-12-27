@@ -16,6 +16,8 @@ export default class MentionInputWidget extends Component {
         super(props);
         this.state = {
             value: '',
+            initialValue: '',
+            editedValue: '',
             data: '',
             mentions: [],
             showEmojis: false,
@@ -29,6 +31,8 @@ export default class MentionInputWidget extends Component {
         this.handleClickOutside = this.handleClickOutside.bind(this);
         this.onAddMentionHandler = this.onAddMention.bind(this);
         this.onAddEmojiHandler = this.onAddEmoji.bind(this);
+        this.onEnterHandler = this.onEnter.bind(this);
+        this.onLeaveHandler = this.onLeave.bind(this);
     }
 
     componentDidMount() {
@@ -58,10 +62,14 @@ export default class MentionInputWidget extends Component {
             // check if widget is readonly
             if (prevProps.valueAttribute.status == 'loading' && this.props.valueAttribute.status == 'available') {
                 this.checkReadOnly();
+
             }
             // valueAttribute changed
             if (prevProps.valueAttribute.value !== this.props.valueAttribute.value) {
                 this.setState({ value: this.props.valueAttribute.value })
+                if (this.props.valueAttribute.value !== this.state.editedValue) {
+                    this.setState({ initialValue: this.props.valueAttribute.value })
+                }
             }
             // datasource is loaded so we can create the mentionslist
             if (this.state.readOnly == false && prevProps.datasource.status == 'loading' && this.props.datasource.status == 'available') {
@@ -119,9 +127,29 @@ export default class MentionInputWidget extends Component {
         // When user changes the input of the text area we have to update the state and the actual Mendix value.
         this.setState({
             value: newValue,
+            editedValue: newValue,
             mentions: mentions
         });
         this.props.valueAttribute.setValue(newValue)
+    }
+
+    onEnter() {
+        if (this.props.onEnterAction && this.props.onEnterAction.canExecute) {
+            this.props.onEnterAction.execute();
+        }
+    }
+
+    onLeave() {
+        if (this.props.onLeaveAction && this.props.onLeaveAction.canExecute) {
+            this.props.onLeaveAction.execute();
+        }
+        // check for on change action here
+        if (this.props.onChangeAction && this.props.onChangeAction.canExecute) {
+            if (this.state.value != this.state.initialValue) {
+                this.props.onChangeAction.execute();
+            }
+        }
+        this.setState({ initialValue: this.state.value });
     }
 
     onAddMention(mention) {
@@ -132,9 +160,7 @@ export default class MentionInputWidget extends Component {
                 return mxObject.id == mention;
             })
             if (mxObject && mxObject.id != null) {
-                console.log('mxObject='+JSON.stringify(mxObject));
-                const test = this.props.datasource.items[0];
-                this.props.onAddMentionAction(test).execute();
+                this.props.onAddMentionAction(mxObject).execute();
             }
         }
     }
@@ -249,6 +275,8 @@ export default class MentionInputWidget extends Component {
                         value={this.state.value}
                         singleLine={singleLine}
                         onChange={this.onChangeValue}
+                        onBlur={this.onLeaveHandler}
+                        onFocus={this.onEnterHandler}
                         placeholder={this.placeholder}
                         className="mentions"
                         allowSuggestionsAboveCursor={this.props.allowSuggestionsAboveCursor}
