@@ -20,12 +20,12 @@
 
 .mentions__suggestions__list {
     background-color: white;
-    border: 1px solid #DDD;
+    border: 1px solid #ddd;
     z-index: 3;
 }
 
 .mentions__suggestions__item {
-    border-bottom: 1px solid #DDD;
+    border-bottom: 1px solid #ddd;
 }
 
 .mentions__suggestions__item--focused {
@@ -39,7 +39,7 @@
     pointer-events: none;
 }
 
-.mentionsReadOnly .mentions__input{
+.mentionsReadOnly .mentions__input {
     border: none;
     pointer-events: none;
 }
