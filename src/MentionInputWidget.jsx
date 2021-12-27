@@ -286,6 +286,7 @@ export default class MentionInputWidget extends Component {
                         onBlur={this.onLeaveHandler}
                         onFocus={this.onEnterHandler}
                         placeholder={this.placeholder}
+                        allowSpaceInQuery={this.props.allowSpaceInQuery}
                         className="mentions"
                         allowSuggestionsAboveCursor={this.props.allowSuggestionsAboveCursor}
                     >

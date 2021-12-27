@@ -66,6 +66,10 @@
                     <caption>Suggestions at cursor</caption>
                     <description>Renders the SuggestionList at the cursor if there is not enough space below</description>
                 </property>
+                <property key="allowSpaceInQuery" type="boolean" defaultValue="true">
+                    <caption>Allow spaces</caption>
+                    <description>Keep suggestions open even if the user separates keywords with spaces.</description>
+                </property>
             </propertyGroup>
             <propertyGroup caption="Events">
                 <property key="onAddMentionAction" type="action" required="false" dataSource="datasource">

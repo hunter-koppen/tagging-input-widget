@@ -21,6 +21,7 @@
 .mentions__suggestions__list {
     background-color: white;
     border: 1px solid #DDD;
+    z-index: 3;
 }
 
 .mentions__suggestions__item {
@@ -51,7 +52,7 @@
     position: absolute;
     cursor: pointer;
     padding: 9px;
-    top: 0px;
+    bottom: 0px;
     right: 0px;
     background-color: transparent;
     border: 0;
