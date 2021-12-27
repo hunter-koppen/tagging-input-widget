@@ -35,8 +35,7 @@
 .mentions__mention {
     position: relative;
     z-index: 1;
-    color: #0a1325;
-    background-color: #cee4e5;
+    color: #020557;
     pointer-events: none;
 }
 
