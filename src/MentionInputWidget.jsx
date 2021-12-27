@@ -97,13 +97,13 @@ export default class MentionInputWidget extends Component {
         let data = [];
         this.props.datasource.items.map(mxObject => {
             const objLabel = this.props.objLabel.get(mxObject).value;
-            const objImageUrl = this.props.objImageUrl ? this.props.objImageUrl.get(mxObject).value : '';
+            const content = this.props.suggestionContent ? this.props.suggestionContent.get(mxObject) : objLabel;
 
             const mentionObj =
             {
                 id: mxObject.id,
                 display: objLabel,
-                imgUrl: objImageUrl
+                content: content
             }
             data.push(mentionObj);
         })
@@ -150,6 +150,14 @@ export default class MentionInputWidget extends Component {
             }
         }
         this.setState({ initialValue: this.state.value });
+    }
+
+    suggestionItem = (suggestion, search, highlightedDisplay, index, focused) => {
+        return (
+            <div className={`user ${focused ? 'focused' : ''}`}>
+                {suggestion.content}
+            </div>
+        )
     }
 
     onAddMention(mention) {
@@ -284,17 +292,7 @@ export default class MentionInputWidget extends Component {
                         <Mention
                             trigger={this.props.mentionTrigger}
                             data={this.state.data}
-                            renderSuggestion={(
-                                suggestion,
-                                search,
-                                highlightedDisplay,
-                                index,
-                                focused
-                            ) => (
-                                <div className={`user ${focused ? 'focused' : ''}`}>
-                                    {highlightedDisplay}
-                                </div>
-                            )}
+                            renderSuggestion={this.suggestionItem}
                             onAdd={this.onAddMentionHandler}
                             className="mentions__mention"
                         />
