@@ -93,7 +93,7 @@ export default class MentionInputWidget extends Component {
 
     loadData() {
         // Function for loading the list of object into the mention suggestions.
-        console.debug('loadDataStarted');
+        console.debug('loadData started');
         let data = [];
         this.props.datasource.items.map(mxObject => {
             const objLabel = this.props.objLabel.get(mxObject).value;
@@ -107,10 +107,11 @@ export default class MentionInputWidget extends Component {
             }
             data.push(mentionObj);
         })
-        console.debug('mentiondata=' + JSON.stringify(data));
+        //console.debug('mentiondata=' + JSON.stringify(data));
         this.setState({
             data: data
         });
+        console.debug('loadData finished');
     }
 
     onChangeValue = (event, newValue, newPlainTextValue, mentions) => {
