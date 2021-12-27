@@ -23,9 +23,6 @@
                     </enumerationValues>
                 </property>
             </propertyGroup>
-            <propertyGroup caption="Label">
-                <systemProperty key="Label"/>
-            </propertyGroup>
             <propertyGroup caption="Visibility">
                 <systemProperty key="Visibility"/>
             </propertyGroup>
@@ -110,7 +107,7 @@
                     <caption>Autofocus search</caption>
                     <description>When the emoji popup is opened autofocus on the searchfield.</description>
                 </property>
-                 <property key="autoConvertEmoji" type="boolean" defaultValue="true">
+                <property key="autoConvertEmoji" type="boolean" defaultValue="true">
                     <caption>Autoconvert common smileys</caption>
                     <description>Automatically convert text smileys to emoji's (e.g. :D)</description>
                 </property>
@@ -118,8 +115,16 @@
         </propertyGroup>
         <propertyGroup caption="Events">
             <propertyGroup caption="Events">
-                <property key="onLeave" type="action" required="false">
+                <property key="onEnterAction" type="action" required="false">
+                    <caption>On enter</caption>
+                    <description></description>
+                </property>
+                <property key="onLeaveAction" type="action" required="false">
                     <caption>On leave</caption>
+                    <description></description>
+                </property>
+                 <property key="onChangeAction" type="action" required="false">
+                    <caption>On change</caption>
                     <description></description>
                 </property>
             </propertyGroup>
