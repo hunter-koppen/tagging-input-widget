@@ -9,12 +9,13 @@
 .mentions .mentions__highlighter {
     display: block;
 }
+
 .mentions .mentions__highlighter--singleLine {
     white-space: nowrap;
 }
 
 .mentions__input {
-    /* unused */
+    margin: 0 !important;
 }
 
 .mentions__suggestions__list {
@@ -41,6 +42,9 @@
 .mentionsReadOnly .mentions__input{
     border: none;
     pointer-events: none;
+}
+.mentionsReadOnly .mentions__highlighter {
+    border: none !important;
 }
 
 .emoji__button {

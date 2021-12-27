@@ -25,11 +25,6 @@
 
 
 To do:
-add optional imageurl for in the dropdown
-add prop for multiple triggers and lists
-add prop for actual textvalue events
-convert text to emoji feature (for example when you type :D)
 add cool icon
 write readme file
 rethink widget name
-Bugfix ios styling
