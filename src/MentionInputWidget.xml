@@ -45,16 +45,13 @@
                     <caption>Mentions list</caption>
                     <description>List of object to show in the mention dropdown</description>
                 </property>
+                <property key="suggestionContent" type="widgets" required="false" dataSource="datasource">
+                    <caption>Content</caption>
+                    <description>Listitem content for the suuggestionlist.</description>
+                </property>
                 <property key="objLabel" type="attribute" required="true" dataSource="datasource">
                     <caption>Mention label</caption>
-                    <description>The label attribute of the mention objects.</description>
-                    <attributeTypes>
-                        <attributeType name="String"/>
-                    </attributeTypes>
-                </property>
-                <property key="objImageUrl" type="attribute" required="false" dataSource="datasource">
-                    <caption>Image URL</caption>
-                    <description>The image url attribute of the mention objects.</description>
+                    <description>The label attribute of the mention objects which will be shown in the text</description>
                     <attributeTypes>
                         <attributeType name="String"/>
                     </attributeTypes>
@@ -123,7 +120,7 @@
                     <caption>On leave</caption>
                     <description></description>
                 </property>
-                 <property key="onChangeAction" type="action" required="false">
+                <property key="onChangeAction" type="action" required="false">
                     <caption>On change</caption>
                     <description></description>
                 </property>
