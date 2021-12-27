@@ -62,6 +62,10 @@
                     <caption>Trigger symbol</caption>
                     <description></description>
                 </property>
+                <property key="keepTriggerSymbol" type="boolean" defaultValue="true">
+                    <caption>Keep trigger symbol</caption>
+                    <description>Keep the trigger symbol in the text after adding a mention.</description>
+                </property>
                 <property key="allowSuggestionsAboveCursor" type="boolean" defaultValue="false">
                     <caption>Suggestions at cursor</caption>
                     <description>Renders the SuggestionList at the cursor if there is not enough space below</description>

@@ -160,6 +160,14 @@ export default class MentionInputWidget extends Component {
         )
     }
 
+    displayTransform = (id, display) => {
+        if (this.props.keepTriggerSymbol) {
+            return ( this.props.mentionTrigger + display )
+        } else {
+            return ( display )
+        }
+    }
+
     onAddMention(mention) {
         console.debug('addedMention=' + JSON.stringify(mention));
         // When someone is mentioned in the textarea we want to fire an action so the developer can control themselves what they want to do with it.
@@ -272,6 +280,7 @@ export default class MentionInputWidget extends Component {
                     >
                         <Mention
                             className="mentions__mention"
+                            displayTransform={this.displayTransform}
                         />
                     </MentionsInput>
                 </div>
@@ -296,6 +305,7 @@ export default class MentionInputWidget extends Component {
                             renderSuggestion={this.suggestionItem}
                             onAdd={this.onAddMentionHandler}
                             className="mentions__mention"
+                            displayTransform={this.displayTransform}
                         />
                     </MentionsInput>
                     {this.state.showEmojis ? (
