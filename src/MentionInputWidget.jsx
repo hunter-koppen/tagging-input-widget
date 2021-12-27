@@ -116,7 +116,7 @@ export default class MentionInputWidget extends Component {
             this.state.mentions &&
             this.state.mentions.length > 0 &&
             mentions &&
-            JSON.stringify(this.state.mentions) !== JSON.stringify(mentions)
+            JSON.stringify(this.state.mentions) != JSON.stringify(mentions) // eslint-disable-line
         ) {
             this.onRemoveMention(mentions);
         }
@@ -181,10 +181,9 @@ export default class MentionInputWidget extends Component {
         const prevMentions = this.state.mentions;
         const currentMentions = mentions;
 
-        var removedMention = prevMentions
+        const removedMention = prevMentions
             .filter(mention => !currentMentions.find(newMention => newMention.id === mention.id))
             .map(mention => ({ id: mention.id }));
-
         // Call onRemove
         if (removedMention && removedMention.length > 0 && this.props.onRemoveMentionAction) {
             console.debug("removedMention=" + JSON.stringify(removedMention));
