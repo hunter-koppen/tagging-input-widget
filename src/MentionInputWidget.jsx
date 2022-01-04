@@ -2,11 +2,6 @@ import React, { Component, createElement } from "react";
 
 import "./ui/MentionInputWidget.css";
 
-import ReactDOM from 'react-dom';
-import editorStyles from "./ui/MentionInputWidget.css";
-
-import "./ui/MentionInputWidget.css";
-
 // react mentions library
 import { Mention, MentionsInput } from "react-mentions";
 

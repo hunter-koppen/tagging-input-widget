@@ -13,7 +13,9 @@
     "mendixHost": "http://localhost:8080",
     "developmentPort": "3000"
   },
-  "eslintIgnore": ["google.js"],
+  "eslintIgnore": [
+    "google.js"
+  ],
   "packagePath": "clevr",
   "scripts": {
     "start": "pluggable-widgets-tools start:web",
