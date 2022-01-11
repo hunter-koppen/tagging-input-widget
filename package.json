@@ -3,7 +3,7 @@
   "widgetName": "MentionInputWidget",
   "version": "1.0.0",
   "description": "Textbox widget for mentioning someone or something in the textarea itself based on a dropdown. Like when using @ in Slack or Teams.",
-  "copyright": "2021 CLEVR B.V.",
+  "copyright": "2021 CLEVR NL B.V.",
   "author": "Hunter Koppen",
   "engines": {
     "node": ">=12"
