@@ -31,8 +31,6 @@
     "@rollup/plugin-json": "^4.1.0"
   },
   "dependencies": {
-    "@draft-js-plugins/editor": "^4.1.0",
-    "@draft-js-plugins/mention": "^5.1.0",
     "classnames": "^2.2.6",
     "emoji-mart": "^3.0.1",
     "react-mentions": "^4.3.0"
