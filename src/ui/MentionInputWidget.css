@@ -1,53 +1,49 @@
-.mentions {
-    /* unused */
+.mx-widget-mentions {
+    position: "relative" 
 }
 
-.mentions__control {
-    /* unused */
-}
-
-.mentions .mentions__highlighter {
+.mx-widget-mentions .mentions .mentions__highlighter {
     display: block;
 }
 
-.mentions .mentions__highlighter--singleLine {
+.mx-widget-mentions .mentions .mentions__highlighter--singleLine {
     white-space: nowrap;
 }
 
-.mentions__input {
+.mx-widget-mentions .mentions__input {
     margin: 0 !important;
 }
 
-.mentions__suggestions__list {
+.mx-widget-mentions .mentions__suggestions__list {
     background-color: white;
     border: 1px solid #ddd;
     z-index: 3;
 }
 
-.mentions__suggestions__item {
+.mx-widget-mentions .mentions__suggestions__item {
     border-bottom: 1px solid #ddd;
 }
 
-.mentions__suggestions__item--focused {
+.mx-widget-mentions .mentions__suggestions__item--focused {
     background-color: #e7e7e9;
 }
 
-.mentions__mention {
+.mx-widget-mentions .mentions__mention {
     position: relative;
     z-index: 1;
     color: #020557;
     pointer-events: none;
 }
 
-.mentionsReadOnly .mentions__input {
+.mx-widget-mentions-readonly .mentions__input {
     border: none;
     pointer-events: none;
 }
-.mentionsReadOnly .mentions__highlighter {
+.mx-widget-mentions-readonly .mentions__highlighter {
     border: none !important;
 }
 
-.emoji__button {
+.mx-widget-mentions .emoji__button {
     position: absolute;
     cursor: pointer;
     padding: 9px;
@@ -57,7 +53,7 @@
     border: 0;
 }
 
-.emoji__picker {
+.mx-widget-mentions .emoji__picker {
     position: absolute;
     right: 0;
     z-index: 999;

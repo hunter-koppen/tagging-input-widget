@@ -2,15 +2,12 @@ import React, { Component, createElement } from "react";
 
 import "./ui/MentionInputWidget.css";
 
-// react mentions library
 import { Mention, MentionsInput } from "react-mentions";
 
-// emoji mart library
 import NimblePicker from "emoji-mart/dist-es/components/picker/nimble-picker";
 import NimbleEmojiIndex from "emoji-mart/dist-es/utils/emoji-index/nimble-emoji-index.js";
 import "emoji-mart/css/emoji-mart.css";
-
-import data from "./data/google";
+import emojidata from "./data/google";
 
 export default class MentionInputWidget extends Component {
     constructor(props) {
@@ -52,30 +49,24 @@ export default class MentionInputWidget extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (prevProps && prevProps === this.props) {
-            // Nothing changed
-        } else if (!this.props && !prevProps) {
-            // Props still empty
-        } else {
-            // check if widget is readonly
-            if (prevProps.valueAttribute.status === "loading" && this.props.valueAttribute.status === "available") {
-                this.checkReadOnly();
+        // Check if widget is readonly
+        if (prevProps.valueAttribute.status === "loading" && this.props.valueAttribute.status === "available") {
+            this.checkReadOnly();
+        }
+        // ValueAttribute changed
+        if (prevProps.valueAttribute.value !== this.props.valueAttribute.value) {
+            this.setState({ value: this.props.valueAttribute.value });
+            if (this.props.valueAttribute.value !== this.state.editedValue) {
+                this.setState({ initialValue: this.props.valueAttribute.value });
             }
-            // valueAttribute changed
-            if (prevProps.valueAttribute.value !== this.props.valueAttribute.value) {
-                this.setState({ value: this.props.valueAttribute.value });
-                if (this.props.valueAttribute.value !== this.state.editedValue) {
-                    this.setState({ initialValue: this.props.valueAttribute.value });
-                }
-            }
-            // datasource is loaded so we can create the mentionslist
-            if (
-                this.state.readOnly === false &&
-                prevProps.datasource.status === "loading" &&
-                this.props.datasource.status === "available"
-            ) {
-                this.loadData();
-            }
+        }
+        // datasource is loaded so we can create the mentionslist
+        if (
+            this.state.readOnly === false &&
+            prevProps.datasource.status === "loading" &&
+            this.props.datasource.status === "available"
+        ) {
+            this.loadData();
         }
     }
 
@@ -103,7 +94,7 @@ export default class MentionInputWidget extends Component {
             const mentionObj = {
                 id: mxObject.id,
                 display: objLabel,
-                content: content
+                content
             };
             suggestionlist.push(mentionObj);
         });
@@ -133,7 +124,7 @@ export default class MentionInputWidget extends Component {
         this.setState({
             value: newValue,
             editedValue: newValue,
-            mentions: mentions
+            mentions
         });
         this.props.valueAttribute.setValue(newValue);
     };
@@ -164,9 +155,8 @@ export default class MentionInputWidget extends Component {
     displayTransform = (id, display) => {
         if (this.props.keepTriggerSymbol) {
             return this.props.mentionTrigger + display;
-        } else {
-            return display;
         }
+        return display;
     };
 
     onAddMention(mention) {
@@ -174,7 +164,7 @@ export default class MentionInputWidget extends Component {
         // When someone is mentioned in the textarea we want to fire an action so the developer can control themselves what they want to do with it.
         if (this.props.onAddMentionAction && mention) {
             const mxObjectToAdd = this.props.datasource.items.find(mxObject => mxObject.id === mention);
-            if (mxObjectToAdd && mxObjectToAdd.id != null) {
+            if (mxObjectToAdd) {
                 this.props.onAddMentionAction(mxObjectToAdd).execute();
             }
         }
@@ -214,7 +204,7 @@ export default class MentionInputWidget extends Component {
 
     getEmoji = emoji => {
         let emoj;
-        const emojiIndex = new NimbleEmojiIndex(data);
+        const emojiIndex = new NimbleEmojiIndex(emojidata);
         switch (emoji) {
             case "D":
                 emoj = emojiIndex.search(":)")[1].native;
@@ -265,7 +255,7 @@ export default class MentionInputWidget extends Component {
 
         if (this.state.readOnly) {
             return (
-                <div ref={this.nodeRef} className="mentionsReadOnly">
+                <div ref={this.nodeRef} className="mx-widget-mentions mx-widget-mentions-readonly">
                     <MentionsInput value={this.state.value} singleLine={singleLine} className="mentions">
                         <Mention className="mentions__mention" displayTransform={this.displayTransform} />
                     </MentionsInput>
@@ -273,7 +263,7 @@ export default class MentionInputWidget extends Component {
             );
         } else {
             return (
-                <div ref={this.nodeRef} style={{ position: "relative" }}>
+                <div ref={this.nodeRef} className="mx-widget-mentions">
                     <MentionsInput
                         value={this.state.value}
                         singleLine={singleLine}
@@ -300,7 +290,7 @@ export default class MentionInputWidget extends Component {
                                 onSelect={this.onAddEmojiHandler}
                                 showSkinTones={false}
                                 sheetSize={32}
-                                data={data}
+                                data={emojidata}
                                 showPreview={false}
                                 native={true}
                                 theme={this.props.emojiPickerTheme}
