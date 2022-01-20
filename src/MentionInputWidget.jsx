@@ -10,29 +10,25 @@ import "emoji-mart/css/emoji-mart.css";
 import emojidata from "./data/google";
 
 export default class MentionInputWidget extends Component {
-    constructor(props) {
-        super(props);
+    state = {
+        value: "",
+        initialValue: "",
+        editedValue: "",
+        data: "",
+        mentions: [],
+        showEmojis: false,
+        readOnly: false,
+        mentionHighlighter: null
+    };
 
-        this.state = {
-            value: "",
-            initialValue: "",
-            editedValue: "",
-            data: "",
-            mentions: [],
-            showEmojis: false,
-            readOnly: false,
-            mentionHighlighter: null
-        };
-
-        this.placeholder = "";
-        this.nodeRef = React.createRef();
-        this.emojiRef = React.createRef();
-        this.handleClickOutsideHandler = this.handleClickOutside.bind(this);
-        this.onAddMentionHandler = this.onAddMention.bind(this);
-        this.onAddEmojiHandler = this.onAddEmoji.bind(this);
-        this.onEnterHandler = this.onEnter.bind(this);
-        this.onLeaveHandler = this.onLeave.bind(this);
-    }
+    placeholder = "";
+    nodeRef = React.createRef();
+    emojiRef = React.createRef();
+    handleClickOutsideHandler = this.handleClickOutside.bind(this);
+    onAddMentionHandler = this.onAddMention.bind(this);
+    onAddEmojiHandler = this.onAddEmoji.bind(this);
+    onEnterHandler = this.onEnter.bind(this);
+    onLeaveHandler = this.onLeave.bind(this);
 
     componentDidMount() {
         this.placeholder = this.props.placeholder ? this.props.placeholder.value : "";
@@ -89,8 +85,7 @@ export default class MentionInputWidget extends Component {
         const suggestionlist = [];
         this.props.datasource.items.forEach(mxObject => {
             const objLabel = this.props.objLabel.get(mxObject).value;
-            const content = this.props.suggestionContent ? this.props.suggestionContent.get(mxObject) : objLabel;
-
+            const content = this.props.suggestionContent?.get(mxObject) ?? objLabel;
             const mentionObj = {
                 id: mxObject.id,
                 display: objLabel,
@@ -105,13 +100,11 @@ export default class MentionInputWidget extends Component {
     }
 
     onChangeValue = (event, newValue, newPlainTextValue, mentions) => {
+        function isChanged(oldMentions, newMentions) {
+            return oldMentions && newMentions && JSON.stringify(oldMentions) !== JSON.stringify(newMentions);
+        }
         // Check for removed mentions
-        if (
-            this.state.mentions &&
-            this.state.mentions.length > 0 &&
-            mentions &&
-            JSON.stringify(this.state.mentions) != JSON.stringify(mentions) // eslint-disable-line
-        ) {
+        if (isChanged(this.state.mentions, mentions)) {
             this.onRemoveMention(mentions);
         }
 
@@ -247,9 +240,10 @@ export default class MentionInputWidget extends Component {
     }
 
     render() {
+        const { renderMode, allowSpaceInQuery, allowSuggestionsAboveCursor, mentionTrigger, autoFocusSearch, emojiPickerTheme, emojiTopbarColor, emojiEnabled } = this.props;
         // check rendermode
         let singleLine = false;
-        if (this.props.renderMode === "textbox") {
+        if (renderMode === "textbox") {
             singleLine = true;
         }
 
@@ -271,12 +265,12 @@ export default class MentionInputWidget extends Component {
                         onBlur={this.onLeaveHandler}
                         onFocus={this.onEnterHandler}
                         placeholder={this.placeholder}
-                        allowSpaceInQuery={this.props.allowSpaceInQuery}
+                        allowSpaceInQuery={allowSpaceInQuery}
                         className="mentions"
-                        allowSuggestionsAboveCursor={this.props.allowSuggestionsAboveCursor}
+                        allowSuggestionsAboveCursor={allowSuggestionsAboveCursor}
                     >
                         <Mention
-                            trigger={this.props.mentionTrigger}
+                            trigger={mentionTrigger}
                             data={this.state.data}
                             renderSuggestion={this.suggestionItem}
                             onAdd={this.onAddMentionHandler}
@@ -293,13 +287,13 @@ export default class MentionInputWidget extends Component {
                                 data={emojidata}
                                 showPreview={false}
                                 native={true}
-                                theme={this.props.emojiPickerTheme}
-                                autoFocus={this.props.autoFocusSearch}
-                                color={this.props.emojiTopbarColor}
+                                theme={emojiPickerTheme}
+                                autoFocus={autoFocusSearch}
+                                color={emojiTopbarColor}
                             />
                         </span>
                     ) : null}
-                    {this.props.emojiEnabled ? (
+                    {emojiEnabled ? (
                         <button className={"emoji__button"} onClick={() => this.setState({ showEmojis: true })}>
                             {String.fromCodePoint(0x1f642)}
                         </button>
