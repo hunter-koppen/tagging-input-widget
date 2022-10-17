@@ -162,17 +162,20 @@ export default class MentionInputContainer extends Component {
     onRemoveMention(mentions) {
         const prevMentions = this.state.mentions;
         const currentMentions = mentions;
-
-        const removedMention = prevMentions
+        const removedMentions = prevMentions
             .filter(mention => !currentMentions.find(newMention => newMention.id === mention.id))
             .map(mention => ({ id: mention.id }));
         // Call onRemove
-        if (removedMention && removedMention.length > 0 && this.props.onRemoveMentionAction) {
-            console.debug("removedMention=" + JSON.stringify(removedMention));
-            const mxObjectToRemove = this.props.datasource.items.find(mxObject => mxObject.id === removedMention[0].id);
-            if (mxObjectToRemove && mxObjectToRemove.id != null) {
-                this.props.onRemoveMentionAction(mxObjectToRemove).execute();
-            }
+        if (removedMentions && removedMentions.length > 0 && this.props.onRemoveMentionAction) {
+            console.debug("removedMention=" + JSON.stringify(removedMentions));
+            removedMentions.forEach(removedMention => {
+                const mxObjectToRemove = this.props.datasource.items.find(
+                    mxObject => mxObject.id === removedMention.id
+                );
+                if (mxObjectToRemove && mxObjectToRemove.id != null) {
+                    this.props.onRemoveMentionAction(mxObjectToRemove).execute();
+                }
+            });
         }
     }
 
