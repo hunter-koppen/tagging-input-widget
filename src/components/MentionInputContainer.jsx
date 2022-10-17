@@ -4,10 +4,12 @@ import "../ui/MentionInputWidget.css";
 
 import { Mention, MentionsInput } from "react-mentions";
 
-import NimblePicker from "emoji-mart/dist-es/components/picker/nimble-picker";
-import NimbleEmojiIndex from "emoji-mart/dist-es/utils/emoji-index/nimble-emoji-index.js";
-import "emoji-mart/css/emoji-mart.css";
-import emojidata from "../data/google";
+import Picker from "@emoji-mart/react";
+import { SearchIndex, init } from "emoji-mart";
+//import "emoji-mart/css/emoji-mart.css";
+import emojidata from "../data/emojis";
+
+init({ emojidata });
 
 export default class MentionInputContainer extends Component {
     state = {
@@ -98,7 +100,8 @@ export default class MentionInputContainer extends Component {
         console.debug("loadData finished");
     }
 
-    onChangeValue = (event, newValue, newPlainTextValue, mentions) => {
+    // eslint-disable-next-line
+    onChangeValue = async (event, newValue, newPlainTextValue, mentions) => {
         function isChanged(oldMentions, newMentions) {
             return oldMentions && newMentions && JSON.stringify(oldMentions) !== JSON.stringify(newMentions);
         }
@@ -109,7 +112,7 @@ export default class MentionInputContainer extends Component {
 
         // check for smileys typed in the text so we can automatically convert them:
         if (newValue && newValue.length > 0 && this.props.autoConvertEmoji && this.props.emojiEnabled) {
-            newValue = this.convertTextToEmojis(newValue);
+            newValue = await this.convertTextToEmojis(newValue);
         }
 
         // When user changes the input of the text area we have to update the state and the actual Mendix value.
@@ -173,48 +176,22 @@ export default class MentionInputContainer extends Component {
         }
     }
 
-    convertTextToEmojis = text => {
+    convertTextToEmojis = async text => {
         const colonsRegex = new RegExp("(^|\\s):([)|D|(|P|O|o])+", "g");
-        let newText = text;
-
         const match = colonsRegex.exec(text);
 
         if (match !== null) {
             const colons = match[2];
             const offset = match.index + match[1].length;
-
-            newText = newText.slice(0, offset) + this.getEmoji(colons) + newText.slice(offset + 2);
+            const emojiSearch = await this.getEmoji(":" + colons);
+            const newText = text.slice(0, offset) + emojiSearch[0].skins[0].native + text.slice(offset + 2);
+            return newText;
+        } else {
+            return text;
         }
-        return newText;
     };
 
-    getEmoji = emoji => {
-        let emoj;
-        const emojiIndex = new NimbleEmojiIndex(emojidata);
-        switch (emoji) {
-            case "D":
-                emoj = emojiIndex.search(":)")[1].native;
-                break;
-            case ")":
-                emoj = emojiIndex.search(":)")[0].native;
-                break;
-            case "(":
-                emoj = emojiIndex.search(":(")[0].native;
-                break;
-            case "P":
-                emoj = emojiIndex.search(":P")[0].native;
-                break;
-            case "o":
-                emoj = emojiIndex.search("Hushed")[0].native;
-                break;
-            case "O":
-                emoj = emojiIndex.search("Hushed")[0].native;
-                break;
-            default:
-                emoj = "";
-        }
-        return emoj;
-    };
+    getEmoji = async value => await SearchIndex.search(value); // eslint-disable-line
 
     onAddEmoji(emoji) {
         console.debug("addedemoji=" + JSON.stringify(emoji));
@@ -240,7 +217,6 @@ export default class MentionInputContainer extends Component {
             mentionTrigger,
             autoFocusSearch,
             emojiPickerTheme,
-            emojiTopbarColor,
             emojiEnabled,
             onEnterAction
         } = this.props;
@@ -283,16 +259,11 @@ export default class MentionInputContainer extends Component {
                     </MentionsInput>
                     {this.state.showEmojis ? (
                         <span ref={this.emojiRef} className={"emoji__picker"}>
-                            <NimblePicker
-                                onSelect={this.onAddEmojiHandler}
-                                showSkinTones={false}
-                                sheetSize={32}
+                            <Picker
+                                onEmojiSelect={this.onAddEmojiHandler}
                                 data={emojidata}
-                                showPreview={false}
-                                native={true}
                                 theme={emojiPickerTheme}
                                 autoFocus={autoFocusSearch}
-                                color={emojiTopbarColor}
                             />
                         </span>
                     ) : null}

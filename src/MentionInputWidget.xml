@@ -84,17 +84,14 @@
                 </property>
             </propertyGroup>
             <propertyGroup caption="Display">
-                <property key="emojiPickerTheme" type="enumeration" defaultValue="light">
+                <property key="emojiPickerTheme" type="enumeration" defaultValue="auto">
                     <caption>Picker Theme</caption>
                     <description>Set a light or darkmode theme for the Emoji picker popup</description>
                     <enumerationValues>
+                        <enumerationValue key="auto">Auto</enumerationValue>
                         <enumerationValue key="light">Light</enumerationValue>
                         <enumerationValue key="dark">Dark</enumerationValue>
                     </enumerationValues>
-                </property>
-                <property key="emojiTopbarColor" type="string" defaultValue="#333" required="true">
-                    <caption>Topbar color</caption>
-                    <description>The top bar category select and hover color</description>
                 </property>
             </propertyGroup>
             <propertyGroup caption="Accessibility">

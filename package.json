@@ -14,7 +14,7 @@
     "developmentPort": "3000"
   },
   "eslintIgnore": [
-    "google.js"
+    "emojis.js"
   ],
   "packagePath": "clevr",
   "scripts": {
@@ -27,12 +27,14 @@
   },
   "license": "Apache-2.0",
   "devDependencies": {
-    "@mendix/pluggable-widgets-tools": "^9.8.0",
+    "@mendix/pluggable-widgets-tools": "^9.17.0",
     "@rollup/plugin-json": "^4.1.0"
   },
   "dependencies": {
+    "@emoji-mart/data": "^1.0.6",
+    "@emoji-mart/react": "^1.0.1",
     "classnames": "^2.2.6",
-    "emoji-mart": "^3.0.1",
-    "react-mentions": "^4.3.0"
+    "emoji-mart": "^5.2.2",
+    "react-mentions": "^4.4.7"
   }
 }

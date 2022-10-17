@@ -1,5 +1,5 @@
 .mx-widget-mentions {
-    position: "relative" 
+    position: relative;
 }
 
 .mx-widget-mentions .mentions .mentions__highlighter {
@@ -17,7 +17,12 @@
 .mx-widget-mentions .mentions__suggestions__list {
     background-color: white;
     border: 1px solid #ddd;
+    border-radius: 4px;
     z-index: 3;
+}
+
+.mx-widget-mentions .mentions__suggestions > ul > li:last-child {
+    border-bottom: none;
 }
 
 .mx-widget-mentions .mentions__suggestions__item {
