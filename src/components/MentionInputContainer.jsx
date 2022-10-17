@@ -1,12 +1,11 @@
 import React, { Component, createElement } from "react";
-
+import { Alert } from "./Alert";
 import "../ui/MentionInputWidget.css";
 
 import { Mention, MentionsInput } from "react-mentions";
 
 import Picker from "@emoji-mart/react";
 import { SearchIndex, init } from "emoji-mart";
-//import "emoji-mart/css/emoji-mart.css";
 import emojidata from "../data/emojis";
 
 init({ emojidata });
@@ -20,7 +19,8 @@ export default class MentionInputContainer extends Component {
         mentions: [],
         showEmojis: false,
         readOnly: false,
-        mentionHighlighter: null
+        mentionHighlighter: null,
+        validationFeedback: null
     };
 
     placeholder = "";
@@ -56,6 +56,10 @@ export default class MentionInputContainer extends Component {
             if (this.props.valueAttribute.value !== this.state.editedValue) {
                 this.setState({ initialValue: this.props.valueAttribute.value });
             }
+        }
+        // set validation
+        if (prevProps.valueAttribute.validation !== this.props.valueAttribute.validation) {
+            this.setState({ validationFeedback: this.props.valueAttribute.validation });
         }
         // datasource is loaded so we can create the mentionslist
         if (
@@ -275,6 +279,13 @@ export default class MentionInputContainer extends Component {
                             {String.fromCodePoint(0x1f642)}
                         </button>
                     ) : null}
+                    <Alert
+                        bootstrapStyle={"danger"}
+                        message={this.state.validationFeedback}
+                        className={"mx-validation-message"}
+                    >
+                        {this.state.validationFeedback}
+                    </Alert>
                 </div>
             );
         }

@@ -23,6 +23,9 @@
                     </enumerationValues>
                 </property>
             </propertyGroup>
+            <propertyGroup caption="Label">
+                <systemProperty key="Label"/>
+            </propertyGroup>
             <propertyGroup caption="Visibility">
                 <systemProperty key="Visibility"/>
             </propertyGroup>
