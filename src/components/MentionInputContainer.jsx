@@ -143,9 +143,7 @@ export default class MentionInputContainer extends Component {
 
     mentionTrigger = query => {
         const maxLength = this.props.maxSuggestions;
-        const filteredMentions = this.state.data.filter(obj => {
-            return obj.display.toLowerCase().includes(query.toLowerCase());
-        });
+        const filteredMentions = this.state.data.filter(obj => obj.display.toLowerCase().includes(query.toLowerCase()));
         if (filteredMentions.length > maxLength) {
             return filteredMentions.slice(0, maxLength);
         } else {

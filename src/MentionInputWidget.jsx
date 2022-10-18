@@ -27,7 +27,7 @@ export default class MentionInputWidget extends Component {
             onLeaveAction,
             onChangeAction,
             onAddMentionAction,
-            onRemoveMentionAction,
+            onRemoveMentionAction
         } = this.props;
         return (
             <MentionInputContainer
