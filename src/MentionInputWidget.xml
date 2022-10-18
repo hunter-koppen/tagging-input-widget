@@ -8,6 +8,15 @@
     </icon>
     <properties>
         <propertyGroup caption="General">
+            <propertyGroup caption="Datasource">
+                <property key="valueAttribute" type="attribute">
+                    <caption>Value attribute</caption>
+                    <description>The attribute that contains the text value</description>
+                    <attributeTypes>
+                        <attributeType name="String"/>
+                    </attributeTypes>
+                </property>
+            </propertyGroup>
             <propertyGroup caption="General">
                 <property key="placeholder" type="expression" required="false">
                     <caption>Placeholder text</caption>
@@ -32,15 +41,6 @@
             <propertyGroup caption="Editability">
                 <systemProperty key="Editability"/>
             </propertyGroup>
-            <propertyGroup caption="Datasource">
-                <property key="valueAttribute" type="attribute">
-                    <caption>Value attribute</caption>
-                    <description>The attribute that contains the text value</description>
-                    <attributeTypes>
-                        <attributeType name="String"/>
-                    </attributeTypes>
-                </property>
-            </propertyGroup>
         </propertyGroup>
         <propertyGroup caption="Mentions">
             <propertyGroup caption="Datasource">
@@ -54,10 +54,14 @@
                 </property>
                 <property key="objLabel" type="attribute" required="true" dataSource="datasource">
                     <caption>Mention label</caption>
-                    <description>The label attribute of the mention objects which will be shown in the text</description>
+                    <description>The label attribute of the mention objects which will be shown in the input and be used to search on</description>
                     <attributeTypes>
                         <attributeType name="String"/>
                     </attributeTypes>
+                </property>
+                <property key="maxSuggestions" type="integer" defaultValue="10" required="true">
+                    <caption>Max amount suggestions</caption>
+                    <description></description>
                 </property>
             </propertyGroup>
             <propertyGroup caption="General">

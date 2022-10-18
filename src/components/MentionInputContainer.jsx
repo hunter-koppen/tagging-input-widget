@@ -141,6 +141,18 @@ export default class MentionInputContainer extends Component {
         this.setState({ initialValue: this.state.value });
     }
 
+    mentionTrigger = query => {
+        const maxLength = this.props.maxSuggestions;
+        const filteredMentions = this.state.data.filter(obj => {
+            return obj.display.toLowerCase().includes(query.toLowerCase());
+        });
+        if (filteredMentions.length > maxLength) {
+            return filteredMentions.slice(0, maxLength);
+        } else {
+            return filteredMentions;
+        }
+    };
+
     suggestionItem = (suggestion, search, highlightedDisplay, index, focused) => (
         <div className={`user ${focused ? "focused" : ""}`}>{suggestion.content}</div>
     );
@@ -257,7 +269,7 @@ export default class MentionInputContainer extends Component {
                     >
                         <Mention
                             trigger={mentionTrigger}
-                            data={this.state.data}
+                            data={this.mentionTrigger}
                             renderSuggestion={this.suggestionItem}
                             onAdd={this.onAddMentionHandler}
                             className="mentions__mention"

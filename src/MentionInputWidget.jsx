@@ -14,6 +14,7 @@ export default class MentionInputWidget extends Component {
             datasource,
             suggestionContent,
             objLabel,
+            maxSuggestions,
             mentionTrigger,
             keepTriggerSymbol,
             allowSuggestionsAboveCursor,
@@ -26,7 +27,7 @@ export default class MentionInputWidget extends Component {
             onLeaveAction,
             onChangeAction,
             onAddMentionAction,
-            onRemoveMentionAction
+            onRemoveMentionAction,
         } = this.props;
         return (
             <MentionInputContainer
@@ -36,6 +37,7 @@ export default class MentionInputWidget extends Component {
                 datasource={datasource}
                 suggestionContent={suggestionContent}
                 objLabel={objLabel}
+                maxSuggestions={maxSuggestions}
                 mentionTrigger={mentionTrigger}
                 keepTriggerSymbol={keepTriggerSymbol}
                 allowSuggestionsAboveCursor={allowSuggestionsAboveCursor}
