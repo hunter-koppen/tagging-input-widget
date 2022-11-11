@@ -50,11 +50,18 @@ export default class MentionInputContainer extends Component {
         if (prevProps.valueAttribute.status === "loading" && this.props.valueAttribute.status === "available") {
             this.checkReadOnly();
         }
-        if (this.props.valueAttribute.status === "available" && this.props.valueAttribute.readOnly && !this.state.readOnly) {
+        if (
+            this.props.valueAttribute.status === "available" &&
+            this.props.valueAttribute.readOnly &&
+            !this.state.readOnly
+        ) {
             this.checkReadOnly();
         }
         // ValueAttribute changed
-        if (prevProps.valueAttribute.value !== this.props.valueAttribute.value || this.props.valueAttribute.value !== this.state.value) {
+        if (
+            prevProps.valueAttribute.value !== this.props.valueAttribute.value ||
+            this.props.valueAttribute.value !== this.state.value
+        ) {
             this.setState({ value: this.props.valueAttribute.value });
             if (this.props.valueAttribute.value !== this.state.editedValue) {
                 this.setState({ initialValue: this.props.valueAttribute.value });
