@@ -50,8 +50,11 @@ export default class MentionInputContainer extends Component {
         if (prevProps.valueAttribute.status === "loading" && this.props.valueAttribute.status === "available") {
             this.checkReadOnly();
         }
+        if (this.props.valueAttribute.status === "available" && this.props.valueAttribute.readOnly && !this.state.readOnly) {
+            this.checkReadOnly();
+        }
         // ValueAttribute changed
-        if (prevProps.valueAttribute.value !== this.props.valueAttribute.value) {
+        if (prevProps.valueAttribute.value !== this.props.valueAttribute.value || this.props.valueAttribute.value !== this.state.value) {
             this.setState({ value: this.props.valueAttribute.value });
             if (this.props.valueAttribute.value !== this.state.editedValue) {
                 this.setState({ initialValue: this.props.valueAttribute.value });
@@ -86,7 +89,6 @@ export default class MentionInputContainer extends Component {
 
     loadData() {
         // Function for loading the list of object into the mention suggestions.
-        console.debug("loadData started");
         const suggestionlist = [];
         this.props.datasource.items.forEach(mxObject => {
             const objLabel = this.props.objLabel.get(mxObject).value;
@@ -101,7 +103,6 @@ export default class MentionInputContainer extends Component {
         this.setState({
             data: suggestionlist
         });
-        console.debug("loadData finished");
     }
 
     // eslint-disable-next-line
@@ -163,7 +164,6 @@ export default class MentionInputContainer extends Component {
     };
 
     onAddMention(mention) {
-        console.debug("addedMention=" + JSON.stringify(mention));
         // When someone is mentioned in the textarea we want to fire an action so the developer can control themselves what they want to do with it.
         if (this.props.onAddMentionAction && mention) {
             const mxObjectToAdd = this.props.datasource.items.find(mxObject => mxObject.id === mention);
@@ -181,7 +181,6 @@ export default class MentionInputContainer extends Component {
             .map(mention => ({ id: mention.id }));
         // Call onRemove
         if (removedMentions && removedMentions.length > 0 && this.props.onRemoveMentionAction) {
-            console.debug("removedMention=" + JSON.stringify(removedMentions));
             removedMentions.forEach(removedMention => {
                 const mxObjectToRemove = this.props.datasource.items.find(
                     mxObject => mxObject.id === removedMention.id
@@ -211,7 +210,6 @@ export default class MentionInputContainer extends Component {
     getEmoji = async value => await SearchIndex.search(value); // eslint-disable-line
 
     onAddEmoji(emoji) {
-        console.debug("addedemoji=" + JSON.stringify(emoji));
         const newValue = this.state.value + emoji.native;
         this.setState({
             showEmojis: false,
