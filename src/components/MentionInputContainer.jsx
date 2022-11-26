@@ -19,6 +19,7 @@ export default class MentionInputContainer extends Component {
         mentions: [],
         showEmojis: false,
         readOnly: false,
+        readOnlyModeChecked: false,
         mentionHighlighter: null,
         validationFeedback: null
     };
@@ -92,6 +93,7 @@ export default class MentionInputContainer extends Component {
             mentionHighlighter.classList.add("form-control");
             mentionInput.classList.add("form-control", "mx-textarea-input");
         }
+        this.setState({ readOnlyModeChecked: true });
     }
 
     loadData() {
@@ -248,7 +250,7 @@ export default class MentionInputContainer extends Component {
             singleLine = true;
         }
 
-        if (this.state.readOnly) {
+        if (this.state.readOnly || !this.state.readOnlyModeChecked) {
             return (
                 <div ref={this.nodeRef} className="mx-widget-mentions mx-widget-mentions-readonly">
                     <MentionsInput value={this.state.value} singleLine={singleLine} className="mentions">

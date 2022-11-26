@@ -14,6 +14,10 @@
     margin: 0 !important;
 }
 
+.mentions__input {
+    border: none;
+}
+
 .mx-widget-mentions .mentions__suggestions__list {
     background-color: white;
     border: 1px solid #ddd;
@@ -55,7 +59,7 @@
     top: 0px;
     right: 0px;
     background-color: transparent;
-    border: 0;
+    border: unset;
 }
 
 .mx-widget-mentions .emoji__picker {
