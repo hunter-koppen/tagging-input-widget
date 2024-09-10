@@ -1,9 +1,9 @@
 {
-  "name": "mentioninputwidget",
-  "widgetName": "MentionInputWidget",
-  "version": "1.0.0",
-  "description": "Textbox widget for mentioning someone or something in the textarea itself based on a dropdown. Like when using @ in Slack or Teams.",
-  "copyright": "2021 CLEVR NL B.V.",
+  "name": "tagginginputwidget",
+  "widgetName": "TaggingInputWidget",
+  "version": "2.0.0",
+  "description": "Textbox widget for tagging or mentioning someone or something in the textarea itself based on a dropdown. Like when using @ in Slack or Teams.",
+  "copyright": "2024 Kobeon B.V.",
   "author": "Hunter Koppen",
   "engines": {
     "node": ">=12"
@@ -16,7 +16,7 @@
   "eslintIgnore": [
     "emojis.js"
   ],
-  "packagePath": "clevr",
+  "packagePath": "kobeon",
   "scripts": {
     "start": "pluggable-widgets-tools start:web",
     "build": "pluggable-widgets-tools build:web",
@@ -27,13 +27,13 @@
   },
   "license": "Apache-2.0",
   "devDependencies": {
-    "@mendix/pluggable-widgets-tools": "^9.17.0",
-    "@rollup/plugin-json": "^4.1.0"
+    "@mendix/pluggable-widgets-tools": "^10.12.1",
+    "@rollup/plugin-json": "^6.1.0"
   },
   "dependencies": {
-    "@emoji-mart/react": "^1.0.1",
+    "@emoji-mart/react": "^1.1.1",
     "classnames": "^2.2.6",
-    "emoji-mart": "^5.2.2",
-    "react-mentions": "^4.4.7"
+    "emoji-mart": "^5.6.0",
+    "react-mentions": "^4.4.10"
   }
 }

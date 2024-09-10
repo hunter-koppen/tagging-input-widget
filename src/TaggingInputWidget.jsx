@@ -1,7 +1,7 @@
 import { Component, createElement } from "react";
 
-import MentionInputContainer from "./components/MentionInputContainer";
-import "./ui/MentionInputWidget.css";
+import TaggingInputWidget from "./components/TaggingInputContainer";
+import "./ui/TaggingInputWidget.css";
 
 export default class MentionInputWidget extends Component {
     onEnterHandler = this.onEnter.bind(this);
@@ -15,7 +15,7 @@ export default class MentionInputWidget extends Component {
             suggestionContent,
             objLabel,
             maxSuggestions,
-            mentionTrigger,
+            tagTrigger,
             keepTriggerSymbol,
             allowSuggestionsAboveCursor,
             allowSpaceInQuery,
@@ -26,11 +26,11 @@ export default class MentionInputWidget extends Component {
             autoConvertEmoji,
             onLeaveAction,
             onChangeAction,
-            onAddMentionAction,
-            onRemoveMentionAction
+            onAddTagAction,
+            onRemoveTagAction
         } = this.props;
         return (
-            <MentionInputContainer
+            <TaggingInputWidget
                 placeholder={placeholder}
                 renderMode={renderMode}
                 valueAttribute={valueAttribute}
@@ -38,7 +38,7 @@ export default class MentionInputWidget extends Component {
                 suggestionContent={suggestionContent}
                 objLabel={objLabel}
                 maxSuggestions={maxSuggestions}
-                mentionTrigger={mentionTrigger}
+                tagTrigger={tagTrigger}
                 keepTriggerSymbol={keepTriggerSymbol}
                 allowSuggestionsAboveCursor={allowSuggestionsAboveCursor}
                 allowSpaceInQuery={allowSpaceInQuery}
@@ -50,8 +50,8 @@ export default class MentionInputWidget extends Component {
                 onEnterAction={this.onEnterHandler}
                 onLeaveAction={onLeaveAction}
                 onChangeAction={onChangeAction}
-                onAddMentionAction={onAddMentionAction}
-                onRemoveMentionAction={onRemoveMentionAction}
+                onAddTagAction={onAddTagAction}
+                onRemoveTagAction={onRemoveTagAction}
             />
         );
     }

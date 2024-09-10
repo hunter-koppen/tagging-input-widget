@@ -1,6 +1,6 @@
 import React, { Component, createElement } from "react";
 import { Alert } from "./Alert";
-import "../ui/MentionInputWidget.css";
+import "../ui/TaggingInputWidget.css";
 
 import { Mention, MentionsInput } from "react-mentions";
 
@@ -10,7 +10,7 @@ import emojidata from "../data/emojis";
 
 init({ emojidata });
 
-export default class MentionInputContainer extends Component {
+export default class TaggingInputWidget extends Component {
     state = {
         value: "",
         initialValue: "",
@@ -28,7 +28,7 @@ export default class MentionInputContainer extends Component {
     nodeRef = React.createRef();
     emojiRef = React.createRef();
     handleClickOutsideHandler = this.handleClickOutside.bind(this);
-    onAddMentionHandler = this.onAddMention.bind(this);
+    onAddTagHandler = this.onAddTag.bind(this);
     onAddEmojiHandler = this.onAddEmoji.bind(this);
     onLeaveHandler = this.onLeave.bind(this);
 
@@ -121,7 +121,7 @@ export default class MentionInputContainer extends Component {
         }
         // Check for removed mentions
         if (isChanged(this.state.mentions, mentions)) {
-            this.onRemoveMention(mentions);
+            this.onRemoveTag(mentions);
         }
 
         // check for smileys typed in the text so we can automatically convert them:
@@ -167,35 +167,35 @@ export default class MentionInputContainer extends Component {
 
     displayTransform = (id, display) => {
         if (this.props.keepTriggerSymbol) {
-            return this.props.mentionTrigger + display;
+            return this.props.tagTrigger + display;
         }
         return display;
     };
 
-    onAddMention(mention) {
+    onAddTag(mention) {
         // When someone is mentioned in the textarea we want to fire an action so the developer can control themselves what they want to do with it.
-        if (this.props.onAddMentionAction && mention) {
+        if (this.props.onAddTagAction && mention) {
             const mxObjectToAdd = this.props.datasource.items.find(mxObject => mxObject.id === mention);
             if (mxObjectToAdd) {
-                this.props.onAddMentionAction(mxObjectToAdd).execute();
+                this.props.onAddTagAction.get(mxObjectToAdd).execute();
             }
         }
     }
 
-    onRemoveMention(mentions) {
+    onRemoveTag(mentions) {
         const prevMentions = this.state.mentions;
         const currentMentions = mentions;
         const removedMentions = prevMentions
             .filter(mention => !currentMentions.find(newMention => newMention.id === mention.id))
             .map(mention => ({ id: mention.id }));
         // Call onRemove
-        if (removedMentions && removedMentions.length > 0 && this.props.onRemoveMentionAction) {
+        if (removedMentions && removedMentions.length > 0 && this.props.onRemoveTagAction) {
             removedMentions.forEach(removedMention => {
                 const mxObjectToRemove = this.props.datasource.items.find(
                     mxObject => mxObject.id === removedMention.id
                 );
                 if (mxObjectToRemove && mxObjectToRemove.id != null) {
-                    this.props.onRemoveMentionAction(mxObjectToRemove).execute();
+                    this.props.onRemoveTagAction.get(mxObjectToRemove).execute();
                 }
             });
         }
@@ -238,7 +238,7 @@ export default class MentionInputContainer extends Component {
             renderMode,
             allowSpaceInQuery,
             allowSuggestionsAboveCursor,
-            mentionTrigger,
+            tagTrigger,
             autoFocusSearch,
             emojiPickerTheme,
             emojiEnabled,
@@ -273,10 +273,10 @@ export default class MentionInputContainer extends Component {
                         allowSuggestionsAboveCursor={allowSuggestionsAboveCursor}
                     >
                         <Mention
-                            trigger={mentionTrigger}
+                            trigger={tagTrigger}
                             data={this.mentionTrigger}
                             renderSuggestion={this.suggestionItem}
-                            onAdd={this.onAddMentionHandler}
+                            onAdd={this.onAddTagHandler}
                             className="mentions__mention"
                             displayTransform={this.displayTransform}
                         />
