@@ -124,18 +124,18 @@ export default class TaggingInputWidget extends Component {
             this.onRemoveTag(mentions);
         }
 
-        // check for smileys typed in the text so we can automatically convert them:
-        if (newValue && newValue.length > 0 && this.props.autoConvertEmoji && this.props.emojiEnabled) {
-            newValue = await this.convertTextToEmojis(newValue);
-        }
-
         // When user changes the input of the text area we have to update the state and the actual Mendix value.
+        this.props.valueAttribute.setValue(newValue);
         this.setState({
             value: newValue,
             editedValue: newValue,
             mentions
         });
-        this.props.valueAttribute.setValue(newValue);
+
+        // check for smileys typed in the text so we can automatically convert them:
+        if (this.props.autoConvertEmoji && this.props.emojiEnabled && newValue.includes(":")) {
+            this.convertTextToEmojis(newValue);
+        }
     };
 
     onLeave() {
@@ -202,17 +202,16 @@ export default class TaggingInputWidget extends Component {
     }
 
     convertTextToEmojis = async text => {
-        const colonsRegex = new RegExp("(^|\\s):([)|D|(|P|O|o])+", "g");
+        const colonsRegex = /(^|\s):([)|D|(|P|O|o])+/g;
         const match = colonsRegex.exec(text);
 
-        if (match !== null) {
-            const colons = match[2];
-            const offset = match.index + match[1].length;
-            const emojiSearch = await this.getEmoji(":" + colons);
-            const newText = text.slice(0, offset) + emojiSearch[0].skins[0].native + text.slice(offset + 2);
-            return newText;
-        } else {
-            return text;
+        if (match) {
+            const emojiSearch = await this.getEmoji(":" + match[2]);
+            if (emojiSearch.length > 0) {
+                const newText = text.replace(match[0], emojiSearch[0].skins[0].native);
+                this.setState({ value: newText });
+                this.props.valueAttribute.setValue(newText);
+            }
         }
     };
 
