@@ -27,7 +27,7 @@
   },
   "license": "Apache-2.0",
   "devDependencies": {
-    "@mendix/pluggable-widgets-tools": "^10.12.1",
+    "@mendix/pluggable-widgets-tools": "^10.15.0",
     "@rollup/plugin-json": "^6.1.0"
   },
   "dependencies": {
