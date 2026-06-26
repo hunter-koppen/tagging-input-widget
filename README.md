@@ -18,7 +18,7 @@ The suggestionlist content:
 You have to develop how you want the dropdown to look yourself, you do this by adding Mendix widgets to the available content container inside the widget itself. Each item in the list will render with exactly what you put in there. You can for example add a profile image this way (see demo example).
 
 Tagging events:
-The onAdd and onRemove tagging events should be used to apply custom business logic based on what people have tagged in the text. For example you can add or remove an association based on these events. Each of these events recieve the object that was selected in the list and you have to manually add this as a parameter to the microflow/nanoflow you have selected for the event.
+The onAdd and onRemove tagging events should be used to apply custom business logic based on what people have tagged in the text. For example you can add or remove an association based on these events. Each of these events receive the object that was selected in the list and you have to manually add this as a parameter to the microflow/nanoflow you have selected for the event.
 
 Emoji's:
 There is also an optional feature to add an emoji picker to the Textbox/Textarea. This picker uses native icons, so for example on an iPhone it will render the Apple's version of the emoji's. It also will allow you to automatically convert common smileys to emoji. (like :D for example).

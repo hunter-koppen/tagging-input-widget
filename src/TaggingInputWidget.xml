@@ -50,7 +50,7 @@
                 </property>
                 <property key="suggestionContent" type="widgets" required="false" dataSource="datasource">
                     <caption>Content</caption>
-                    <description>Listitem content for the suuggestionlist.</description>
+                    <description>Listitem content for the suggestionlist.</description>
                 </property>
                 <property key="objLabel" type="attribute" required="true" dataSource="datasource">
                     <caption>Tagging label</caption>

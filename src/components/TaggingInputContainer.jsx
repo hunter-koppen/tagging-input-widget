@@ -8,7 +8,7 @@ import Picker from "@emoji-mart/react";
 import { SearchIndex, init } from "emoji-mart";
 import emojidata from "../data/emojis";
 
-init({ emojidata });
+init({ data: emojidata });
 
 export default class TaggingInputWidget extends Component {
     state = {
@@ -24,7 +24,6 @@ export default class TaggingInputWidget extends Component {
         validationFeedback: null
     };
 
-    placeholder = "";
     nodeRef = React.createRef();
     emojiRef = React.createRef();
     handleClickOutsideHandler = this.handleClickOutside.bind(this);
@@ -33,13 +32,25 @@ export default class TaggingInputWidget extends Component {
     onLeaveHandler = this.onLeave.bind(this);
 
     componentDidMount() {
-        this.placeholder = this.props.placeholder ? this.props.placeholder.value : "";
-
         // We have to add some standard mendix classes to the rendered divs so they automatically look correct based on custom styles already existing
         const mentionControl = this.nodeRef.current.querySelectorAll(".mentions__control");
         mentionControl[0].classList.add("form-group");
 
         document.addEventListener("mousedown", this.handleClickOutsideHandler, false);
+
+        // The attribute may already be available on first render (e.g. cached data) without ever
+        // going through a loading -> available transition, so initialize from it here as well.
+        if (this.props.valueAttribute.status === "available") {
+            this.checkReadOnly();
+            this.setState({
+                value: this.props.valueAttribute.value,
+                initialValue: this.props.valueAttribute.value
+            });
+        }
+        // Same for the datasource: load the suggestions if it is already available on mount.
+        if (!this.props.valueAttribute.readOnly && this.props.datasource.status === "available") {
+            this.loadData();
+        }
     }
 
     componentWillUnmount() {
@@ -58,25 +69,26 @@ export default class TaggingInputWidget extends Component {
         ) {
             this.checkReadOnly();
         }
-        // ValueAttribute changed
-        if (
-            prevProps.valueAttribute.value !== this.props.valueAttribute.value ||
-            this.props.valueAttribute.value !== this.state.value
-        ) {
-            this.setState({ value: this.props.valueAttribute.value });
-            if (this.props.valueAttribute.value !== this.state.editedValue) {
-                this.setState({ initialValue: this.props.valueAttribute.value });
+        // ValueAttribute changed externally (in Mendix). Only sync when the prop value actually
+        // changed since the previous render - comparing against state.value would revert the input
+        // to the stale prop value while typing, because setValue() updates the prop asynchronously.
+        if (prevProps.valueAttribute.value !== this.props.valueAttribute.value) {
+            const newValue = this.props.valueAttribute.value;
+            this.setState({ value: newValue });
+            if (newValue !== this.state.editedValue) {
+                this.setState({ initialValue: newValue });
             }
         }
         // set validation
         if (prevProps.valueAttribute.validation !== this.props.valueAttribute.validation) {
             this.setState({ validationFeedback: this.props.valueAttribute.validation });
         }
-        // datasource is loaded so we can create the mentionslist
+        // (Re)load the suggestion list whenever the datasource items change - this covers the
+        // initial loading -> available transition as well as later filter/refresh/list changes.
         if (
             this.state.readOnly === false &&
-            prevProps.datasource.status === "loading" &&
-            this.props.datasource.status === "available"
+            this.props.datasource.status === "available" &&
+            prevProps.datasource.items !== this.props.datasource.items
         ) {
             this.loadData();
         }
@@ -152,14 +164,18 @@ export default class TaggingInputWidget extends Component {
     }
 
     mentionTrigger = query => {
-        const maxLength = this.props.maxSuggestions;
-        const filteredMentions = this.state.data.filter(obj => obj.display.toLowerCase().includes(query.toLowerCase()));
-        if (filteredMentions.length > maxLength) {
-            return filteredMentions.slice(0, maxLength);
-        } else {
-            return filteredMentions;
-        }
+        const lowerQuery = query.toLowerCase();
+        return this.state.data
+            .filter(obj => obj.display.toLowerCase().includes(lowerQuery))
+            .slice(0, this.props.maxSuggestions);
     };
+
+    // Shared updater for value changes that don't originate from react-mentions onChange
+    // (emoji insert / auto-convert), so state and the Mendix attribute stay in sync.
+    applyValue(newValue) {
+        this.setState({ value: newValue, editedValue: newValue });
+        this.props.valueAttribute.setValue(newValue);
+    }
 
     suggestionItem = (suggestion, search, highlightedDisplay, index, focused) => (
         <div className={`user ${focused ? "focused" : ""}`}>{suggestion.content}</div>
@@ -194,7 +210,7 @@ export default class TaggingInputWidget extends Component {
                 const mxObjectToRemove = this.props.datasource.items.find(
                     mxObject => mxObject.id === removedMention.id
                 );
-                if (mxObjectToRemove && mxObjectToRemove.id != null) {
+                if (mxObjectToRemove) {
                     this.props.onRemoveTagAction.get(mxObjectToRemove).execute();
                 }
             });
@@ -202,15 +218,17 @@ export default class TaggingInputWidget extends Component {
     }
 
     convertTextToEmojis = async text => {
-        const colonsRegex = /(^|\s):([)|D|(|P|O|o])+/g;
+        // Capture the leading boundary and the full smiley separately so we can preserve any
+        // preceding whitespace and search on the complete smiley (e.g. ":D", ":)", ":P").
+        const colonsRegex = /(^|\s)(:[)D(POo]+)/g;
         const match = colonsRegex.exec(text);
 
         if (match) {
-            const emojiSearch = await this.getEmoji(":" + match[2]);
+            const [fullMatch, leading, smiley] = match;
+            const emojiSearch = await this.getEmoji(smiley);
             if (emojiSearch.length > 0) {
-                const newText = text.replace(match[0], emojiSearch[0].skins[0].native);
-                this.setState({ value: newText });
-                this.props.valueAttribute.setValue(newText);
+                const newText = text.replace(fullMatch, leading + emojiSearch[0].skins[0].native);
+                this.applyValue(newText);
             }
         }
     };
@@ -218,12 +236,8 @@ export default class TaggingInputWidget extends Component {
     getEmoji = async value => await SearchIndex.search(value); // eslint-disable-line
 
     onAddEmoji(emoji) {
-        const newValue = this.state.value + emoji.native;
-        this.setState({
-            showEmojis: false,
-            value: newValue
-        });
-        this.props.valueAttribute.setValue(newValue);
+        this.setState({ showEmojis: false });
+        this.applyValue(this.state.value + emoji.native);
     }
 
     handleClickOutside(event) {
@@ -248,6 +262,8 @@ export default class TaggingInputWidget extends Component {
         if (renderMode === "textbox") {
             singleLine = true;
         }
+        // Read the placeholder on every render so a dynamic expression keeps working
+        const placeholder = this.props.placeholder ? this.props.placeholder.value : "";
 
         if (this.state.readOnly || !this.state.readOnlyModeChecked) {
             return (
@@ -266,7 +282,7 @@ export default class TaggingInputWidget extends Component {
                         onChange={this.onChangeValue}
                         onBlur={this.onLeaveHandler}
                         onFocus={onEnterAction}
-                        placeholder={this.placeholder}
+                        placeholder={placeholder}
                         allowSpaceInQuery={allowSpaceInQuery}
                         className="mentions"
                         allowSuggestionsAboveCursor={allowSuggestionsAboveCursor}
@@ -291,7 +307,12 @@ export default class TaggingInputWidget extends Component {
                         </span>
                     ) : null}
                     {emojiEnabled ? (
-                        <button className={"emoji__button"} onClick={() => this.setState({ showEmojis: true })}>
+                        <button
+                            type="button"
+                            aria-label="Open emoji picker"
+                            className={"emoji__button"}
+                            onClick={() => this.setState({ showEmojis: true })}
+                        >
                             {String.fromCodePoint(0x1f642)}
                         </button>
                     ) : null}
@@ -299,9 +320,7 @@ export default class TaggingInputWidget extends Component {
                         bootstrapStyle={"danger"}
                         message={this.state.validationFeedback}
                         className={"mx-validation-message"}
-                    >
-                        {this.state.validationFeedback}
-                    </Alert>
+                    />
                 </div>
             );
         }
