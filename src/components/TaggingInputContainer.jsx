@@ -42,9 +42,12 @@ export default class TaggingInputWidget extends Component {
         // going through a loading -> available transition, so initialize from it here as well.
         if (this.props.valueAttribute.status === "available") {
             this.checkReadOnly();
+            // An empty/null Mendix attribute returns `undefined`; normalize to "" so react-mentions
+            // (whose paste handler does not guard against undefined) never receives undefined.
+            const initialValue = this.props.valueAttribute.value ?? "";
             this.setState({
-                value: this.props.valueAttribute.value,
-                initialValue: this.props.valueAttribute.value
+                value: initialValue,
+                initialValue
             });
         }
         // Same for the datasource: load the suggestions if it is already available on mount.
@@ -73,7 +76,7 @@ export default class TaggingInputWidget extends Component {
         // changed since the previous render - comparing against state.value would revert the input
         // to the stale prop value while typing, because setValue() updates the prop asynchronously.
         if (prevProps.valueAttribute.value !== this.props.valueAttribute.value) {
-            const newValue = this.props.valueAttribute.value;
+            const newValue = this.props.valueAttribute.value ?? "";
             this.setState({ value: newValue });
             if (newValue !== this.state.editedValue) {
                 this.setState({ initialValue: newValue });
@@ -268,7 +271,7 @@ export default class TaggingInputWidget extends Component {
         if (this.state.readOnly || !this.state.readOnlyModeChecked) {
             return (
                 <div ref={this.nodeRef} className="mx-widget-mentions mx-widget-mentions-readonly">
-                    <MentionsInput value={this.state.value} singleLine={singleLine} className="mentions">
+                    <MentionsInput value={this.state.value ?? ""} singleLine={singleLine} className="mentions">
                         <Mention className="mentions__mention" displayTransform={this.displayTransform} />
                     </MentionsInput>
                 </div>
@@ -277,7 +280,7 @@ export default class TaggingInputWidget extends Component {
             return (
                 <div ref={this.nodeRef} className="mx-widget-mentions">
                     <MentionsInput
-                        value={this.state.value}
+                        value={this.state.value ?? ""}
                         singleLine={singleLine}
                         onChange={this.onChangeValue}
                         onBlur={this.onLeaveHandler}
